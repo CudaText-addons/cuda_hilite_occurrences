@@ -1,2 +1,2 @@
-# cuda_hilite_occurrences
-Python plagin for CudaText editor
+﻿# Hilite Occurrences
+Python plagin for [CudaText editor](http://uvviewsoft.com)
