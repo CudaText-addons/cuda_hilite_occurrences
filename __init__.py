@@ -163,6 +163,9 @@ def _get_current_text(ed):
     if SEL_ALLOW: current_text = ed.get_text_sel()
     else: return
   else:
+    # Иногда бывает, что каретка может находится за текстом (если так настроен редактор, или ее перемещают через API).
+    if len(ed.get_text_line(y1)) < x1: return
+
     if CARET_ALLOW:
       temp = get_word_under_caret(ed)
       if not temp: return
