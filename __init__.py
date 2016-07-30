@@ -1,14 +1,13 @@
-﻿import string as _string
-import cudatext as _ct
-
-if _ct.app_api_version() < '1.0.114':
-  _ct.msg_box('Hilite Occurrences needs newer app version', _ct.MB_OK + _ct.MB_ICONWARNING)
+﻿import os
+import string
+import cudatext as app
+import cudax_lib as apx
 
 #----------------------Settings---------------------#
 MIN_LEN  = 1 # For word or selected text.
 MAX_SIZE = 0 # In bytes. Not used yet.
 
-CHARS = _string.ascii_letters + _string.digits + '_'
+CHARS = string.ascii_letters + string.digits + '_'
 
 SEL_ALLOW             = True  # Hilite all occurrences of selected text.
 SEL_ALLOW_WHITE_SPACE = False # Hilite spaces there located in begin or end of selection
@@ -27,10 +26,84 @@ COLOR_BG_CURRENT   = 0xe3c1e3
 #-----------------------------------------------#
 
 MARKTAG = 101 #uniq value for all markers plugins
+fn_ini = os.path.join(app.app_path(app.APP_DIR_SETTINGS), 'cuda_hilite_occurrences.ini')
+
+
+def do_load_ops():
+  global MIN_LEN              
+  global SEL_ALLOW            
+  global SEL_ALLOW_WHITE_SPACE
+  global SEL_CASE_SENSITIVE   
+  global SEL_WORDS_ONLY       
+  global SEL_WHOLE_WORDS      
+  global CARET_ALLOW          
+  global CARET_CASE_SENSITIVE 
+  global CARET_WHOLE_WORDS    
+  global COLOR_FONT_OTHER     
+  global COLOR_BG_OTHER       
+  global COLOR_FONT_CURRENT   
+  global COLOR_BG_CURRENT     
+
+  MIN_LEN               = int(app.ini_read(fn_ini, 'op', 'MIN_LEN', '1'))
+  
+  SEL_ALLOW             = app.ini_read(fn_ini, 'op', 'SEL_ALLOW', '1')=='1'
+  SEL_ALLOW_WHITE_SPACE = app.ini_read(fn_ini, 'op', 'SEL_ALLOW_WHITE_SPACE', '0')=='1'
+  SEL_CASE_SENSITIVE    = app.ini_read(fn_ini, 'op', 'SEL_CASE_SENSITIVE', '0')=='1'
+  SEL_WORDS_ONLY        = app.ini_read(fn_ini, 'op', 'SEL_WORDS_ONLY', '0')=='1'
+  SEL_WHOLE_WORDS       = app.ini_read(fn_ini, 'op', 'SEL_WHOLE_WORDS', '0')=='1'
+  
+  CARET_ALLOW           = app.ini_read(fn_ini, 'op', 'CARET_ALLOW', '1')=='1'
+  CARET_CASE_SENSITIVE  = app.ini_read(fn_ini, 'op', 'CARET_CASE_SENSITIVE', '1')=='1'
+  CARET_WHOLE_WORDS     = app.ini_read(fn_ini, 'op', 'CARET_WHOLE_WORDS', '1')=='1'
+  
+  COLOR_FONT_OTHER      = apx.html_color_to_int(app.ini_read(fn_ini, 'colors', 'COLOR_FONT_OTHER', int_to_html(0x000000)))
+  COLOR_BG_OTHER        = apx.html_color_to_int(app.ini_read(fn_ini, 'colors', 'COLOR_BG_OTHER', int_to_html(0x80FFFF)))
+  COLOR_FONT_CURRENT    = apx.html_color_to_int(app.ini_read(fn_ini, 'colors', 'COLOR_FONT_CURRENT', int_to_html(0x000000)))
+  COLOR_BG_CURRENT      = apx.html_color_to_int(app.ini_read(fn_ini, 'colors', 'COLOR_BG_CURRENT', int_to_html(0xe3c1e3)))
+
+
+def int_to_html(n):
+    s = '%06x' % n
+    r, g, b = s[4:], s[2:4], s[:2]
+    return '#'+r+g+b
+
+
+def bool_str(b):
+  return '1' if b else '0'
+  
+
+def do_save_ops():
+  app.ini_write(fn_ini, 'op', 'MIN_LEN', str(MIN_LEN))
+  
+  app.ini_write(fn_ini, 'op', 'SEL_ALLOW', bool_str(SEL_ALLOW))
+  app.ini_write(fn_ini, 'op', 'SEL_ALLOW_WHITE_SPACE', bool_str(SEL_ALLOW_WHITE_SPACE))
+  app.ini_write(fn_ini, 'op', 'SEL_CASE_SENSITIVE', bool_str(SEL_CASE_SENSITIVE))
+  app.ini_write(fn_ini, 'op', 'SEL_WORDS_ONLY', bool_str(SEL_WORDS_ONLY))
+  app.ini_write(fn_ini, 'op', 'SEL_WHOLE_WORDS', bool_str(SEL_WHOLE_WORDS))
+  
+  app.ini_write(fn_ini, 'op', 'CARET_ALLOW', bool_str(CARET_ALLOW))
+  app.ini_write(fn_ini, 'op', 'CARET_CASE_SENSITIVE', bool_str(CARET_CASE_SENSITIVE))
+  app.ini_write(fn_ini, 'op', 'CARET_WHOLE_WORDS', bool_str(CARET_WHOLE_WORDS))
+  
+  app.ini_write(fn_ini, 'colors', 'COLOR_FONT_OTHER', int_to_html(COLOR_FONT_OTHER))
+  app.ini_write(fn_ini, 'colors', 'COLOR_BG_OTHER', int_to_html(COLOR_BG_OTHER))
+  app.ini_write(fn_ini, 'colors', 'COLOR_FONT_CURRENT', int_to_html(COLOR_FONT_CURRENT))
+  app.ini_write(fn_ini, 'colors', 'COLOR_BG_CURRENT', int_to_html(COLOR_BG_CURRENT))
+
 
 class Command:
+  def __init__(self):
+    do_load_ops()
+    
+  def config(self):
+    do_save_ops()
+    if os.path.isfile(fn_ini):
+      app.file_open(fn_ini)
+    else:
+      app.msg_status('Config file not exists')
+
   def on_caret(self, ed_self):
-    ed_self.attr(_ct.MARKERS_DELETE_BY_TAG, MARKTAG)
+    ed_self.attr(app.MARKERS_DELETE_BY_TAG, MARKTAG)
 
     # TODO: ...
     if MAX_SIZE: pass
@@ -70,12 +143,12 @@ class Command:
     for item in items:
       if item == (x0, y0): continue
 
-      ed_self.attr(_ct.MARKERS_ADD, MARKTAG, item[0], item[1], len(text), COLOR_FONT_OTHER, COLOR_BG_OTHER)
+      ed_self.attr(app.MARKERS_ADD, MARKTAG, item[0], item[1], len(text), COLOR_FONT_OTHER, COLOR_BG_OTHER)
     else:
       if CARET_ALLOW and not is_selection:
-        ed_self.attr(_ct.MARKERS_ADD, MARKTAG, x0, y0, len(text), COLOR_FONT_CURRENT, COLOR_BG_CURRENT)
+        ed_self.attr(app.MARKERS_ADD, MARKTAG, x0, y0, len(text), COLOR_FONT_CURRENT, COLOR_BG_CURRENT)
 
-    _ct.msg_status('Matches hilited: {}'.format(len(items)))
+    app.msg_status('Matches hilited: {}'.format(len(items)))
 
 def is_word(s):
   for ch in s:
