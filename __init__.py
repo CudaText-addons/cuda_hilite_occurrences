@@ -44,22 +44,22 @@ def do_load_ops():
   global COLOR_FONT_CURRENT   
   global COLOR_BG_CURRENT     
 
-  MIN_LEN               = int(app.ini_read(fn_ini, 'op', 'MIN_LEN', '1'))
+  MIN_LEN               = int(app.ini_read(fn_ini, 'op', 'min_len', '1'))
   
-  SEL_ALLOW             = app.ini_read(fn_ini, 'op', 'SEL_ALLOW', '1')=='1'
-  SEL_ALLOW_WHITE_SPACE = app.ini_read(fn_ini, 'op', 'SEL_ALLOW_WHITE_SPACE', '0')=='1'
-  SEL_CASE_SENSITIVE    = app.ini_read(fn_ini, 'op', 'SEL_CASE_SENSITIVE', '0')=='1'
-  SEL_WORDS_ONLY        = app.ini_read(fn_ini, 'op', 'SEL_WORDS_ONLY', '0')=='1'
-  SEL_WHOLE_WORDS       = app.ini_read(fn_ini, 'op', 'SEL_WHOLE_WORDS', '0')=='1'
+  SEL_ALLOW             = app.ini_read(fn_ini, 'op', 'sel_allow', '1')=='1'
+  SEL_ALLOW_WHITE_SPACE = app.ini_read(fn_ini, 'op', 'sel_allow_white_space', '0')=='1'
+  SEL_CASE_SENSITIVE    = app.ini_read(fn_ini, 'op', 'sel_case_sensitive', '0')=='1'
+  SEL_WORDS_ONLY        = app.ini_read(fn_ini, 'op', 'sel_words_only', '0')=='1'
+  SEL_WHOLE_WORDS       = app.ini_read(fn_ini, 'op', 'sel_whole_words', '0')=='1'
   
-  CARET_ALLOW           = app.ini_read(fn_ini, 'op', 'CARET_ALLOW', '1')=='1'
-  CARET_CASE_SENSITIVE  = app.ini_read(fn_ini, 'op', 'CARET_CASE_SENSITIVE', '1')=='1'
-  CARET_WHOLE_WORDS     = app.ini_read(fn_ini, 'op', 'CARET_WHOLE_WORDS', '1')=='1'
+  CARET_ALLOW           = app.ini_read(fn_ini, 'op', 'caret_allow', '1')=='1'
+  CARET_CASE_SENSITIVE  = app.ini_read(fn_ini, 'op', 'caret_case_sensitive', '1')=='1'
+  CARET_WHOLE_WORDS     = app.ini_read(fn_ini, 'op', 'caret_whole_words', '1')=='1'
   
-  COLOR_FONT_OTHER      = apx.html_color_to_int(app.ini_read(fn_ini, 'colors', 'COLOR_FONT_OTHER', int_to_html(0x000000)))
-  COLOR_BG_OTHER        = apx.html_color_to_int(app.ini_read(fn_ini, 'colors', 'COLOR_BG_OTHER', int_to_html(0x80FFFF)))
-  COLOR_FONT_CURRENT    = apx.html_color_to_int(app.ini_read(fn_ini, 'colors', 'COLOR_FONT_CURRENT', int_to_html(0x000000)))
-  COLOR_BG_CURRENT      = apx.html_color_to_int(app.ini_read(fn_ini, 'colors', 'COLOR_BG_CURRENT', int_to_html(0xe3c1e3)))
+  COLOR_FONT_OTHER      = apx.html_color_to_int(app.ini_read(fn_ini, 'colors', 'font_other', int_to_html(0x000000)))
+  COLOR_BG_OTHER        = apx.html_color_to_int(app.ini_read(fn_ini, 'colors', 'bg_other', int_to_html(0x80ffff)))
+  COLOR_FONT_CURRENT    = apx.html_color_to_int(app.ini_read(fn_ini, 'colors', 'font_current', int_to_html(0x000000)))
+  COLOR_BG_CURRENT      = apx.html_color_to_int(app.ini_read(fn_ini, 'colors', 'bg_current', int_to_html(0xe3c1e3)))
 
 
 def int_to_html(n):
@@ -73,22 +73,22 @@ def bool_str(b):
   
 
 def do_save_ops():
-  app.ini_write(fn_ini, 'op', 'MIN_LEN', str(MIN_LEN))
+  app.ini_write(fn_ini, 'op', 'min_len', str(MIN_LEN))
   
-  app.ini_write(fn_ini, 'op', 'SEL_ALLOW', bool_str(SEL_ALLOW))
-  app.ini_write(fn_ini, 'op', 'SEL_ALLOW_WHITE_SPACE', bool_str(SEL_ALLOW_WHITE_SPACE))
-  app.ini_write(fn_ini, 'op', 'SEL_CASE_SENSITIVE', bool_str(SEL_CASE_SENSITIVE))
-  app.ini_write(fn_ini, 'op', 'SEL_WORDS_ONLY', bool_str(SEL_WORDS_ONLY))
-  app.ini_write(fn_ini, 'op', 'SEL_WHOLE_WORDS', bool_str(SEL_WHOLE_WORDS))
+  app.ini_write(fn_ini, 'op', 'sel_allow', bool_str(SEL_ALLOW))
+  app.ini_write(fn_ini, 'op', 'sel_allow_white_space', bool_str(SEL_ALLOW_WHITE_SPACE))
+  app.ini_write(fn_ini, 'op', 'sel_case_sensitive', bool_str(SEL_CASE_SENSITIVE))
+  app.ini_write(fn_ini, 'op', 'sel_words_only', bool_str(SEL_WORDS_ONLY))
+  app.ini_write(fn_ini, 'op', 'sel_whole_words', bool_str(SEL_WHOLE_WORDS))
   
-  app.ini_write(fn_ini, 'op', 'CARET_ALLOW', bool_str(CARET_ALLOW))
-  app.ini_write(fn_ini, 'op', 'CARET_CASE_SENSITIVE', bool_str(CARET_CASE_SENSITIVE))
-  app.ini_write(fn_ini, 'op', 'CARET_WHOLE_WORDS', bool_str(CARET_WHOLE_WORDS))
+  app.ini_write(fn_ini, 'op', 'caret_allow', bool_str(CARET_ALLOW))
+  app.ini_write(fn_ini, 'op', 'caret_case_sensitive', bool_str(CARET_CASE_SENSITIVE))
+  app.ini_write(fn_ini, 'op', 'caret_whole_words', bool_str(CARET_WHOLE_WORDS))
   
-  app.ini_write(fn_ini, 'colors', 'COLOR_FONT_OTHER', int_to_html(COLOR_FONT_OTHER))
-  app.ini_write(fn_ini, 'colors', 'COLOR_BG_OTHER', int_to_html(COLOR_BG_OTHER))
-  app.ini_write(fn_ini, 'colors', 'COLOR_FONT_CURRENT', int_to_html(COLOR_FONT_CURRENT))
-  app.ini_write(fn_ini, 'colors', 'COLOR_BG_CURRENT', int_to_html(COLOR_BG_CURRENT))
+  app.ini_write(fn_ini, 'colors', 'font_other', int_to_html(COLOR_FONT_OTHER))
+  app.ini_write(fn_ini, 'colors', 'bg_other', int_to_html(COLOR_BG_OTHER))
+  app.ini_write(fn_ini, 'colors', 'font_current', int_to_html(COLOR_FONT_CURRENT))
+  app.ini_write(fn_ini, 'colors', 'bg_current', int_to_html(COLOR_BG_CURRENT))
 
 
 class Command:
