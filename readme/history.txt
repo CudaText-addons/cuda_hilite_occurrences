@@ -1,4 +1,7 @@
 
+2017.01.27
+- fix if caret sel beyond EOF (mass replace)
+
 2016.07.31 (Alex)
 + config file
 + commd "Config" in Plugins
