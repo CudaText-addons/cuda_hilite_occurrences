@@ -1,7 +1,7 @@
 ﻿import os
 import string
 import cudatext as app
-import cudax_lib as apx
+from .html_color import *
 from . import opt
 
 CHARS = string.ascii_letters + string.digits + '_'
@@ -23,16 +23,10 @@ def do_load_ops():
   opt.CARET_CASE_SENSITIVE  = app.ini_read(fn_ini, 'op', 'caret_case_sensitive', '1')=='1'
   opt.CARET_WHOLE_WORDS     = app.ini_read(fn_ini, 'op', 'caret_whole_words', '1')=='1'
 
-  opt.COLOR_FONT_OTHER      = apx.html_color_to_int(app.ini_read(fn_ini, 'colors', 'font_other', int_to_html(0x000000)))
-  opt.COLOR_BG_OTHER        = apx.html_color_to_int(app.ini_read(fn_ini, 'colors', 'bg_other', int_to_html(0x80ffff)))
-  opt.COLOR_FONT_CURRENT    = apx.html_color_to_int(app.ini_read(fn_ini, 'colors', 'font_current', int_to_html(0x000000)))
-  opt.COLOR_BG_CURRENT      = apx.html_color_to_int(app.ini_read(fn_ini, 'colors', 'bg_current', int_to_html(0xe3c1e3)))
-
-
-def int_to_html(n):
-    s = '%06x' % n
-    r, g, b = s[4:], s[2:4], s[:2]
-    return '#'+r+g+b
+  opt.COLOR_FONT_OTHER      = html_color_to_int(app.ini_read(fn_ini, 'colors', 'font_other', int_to_html(0x000000)))
+  opt.COLOR_BG_OTHER        = html_color_to_int(app.ini_read(fn_ini, 'colors', 'bg_other', int_to_html(0x80ffff)))
+  opt.COLOR_FONT_CURRENT    = html_color_to_int(app.ini_read(fn_ini, 'colors', 'font_current', int_to_html(0x000000)))
+  opt.COLOR_BG_CURRENT      = html_color_to_int(app.ini_read(fn_ini, 'colors', 'bg_current', int_to_html(0xe3c1e3)))
 
 
 def bool_str(b):
