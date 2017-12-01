@@ -57,12 +57,14 @@ class Command:
   def __init__(self):
     do_load_ops()
 
+
   def config(self):
     do_save_ops()
     if os.path.isfile(fn_ini):
       app.file_open(fn_ini)
     else:
-      app.msg_status('Config file not exists')
+      app.msg_status('Config file not found')
+
 
   def on_caret(self, ed_self):
     ed_self.attr(app.MARKERS_DELETE_BY_TAG, MARKTAG)
@@ -70,7 +72,7 @@ class Command:
     if ed_self.get_line_count()>opt.MAX_LINES:
         return
 
-    current_text = _get_current_text(ed_self) # if not (opt.SEL_ALLOW or opt.CARET_ALLOW): bool(current_text) == False
+    current_text = _get_current_text(ed_self)
     if not current_text: return
 
     text, caret_pos, is_selection = current_text
@@ -110,10 +112,12 @@ class Command:
 
     app.msg_status('Matches hilited: {}'.format(len(items)))
 
+
 def is_word(s):
   for ch in s:
     if not ch in CHARS: return False
   return True
+
 
 def find_all_occurrences(ed, text, case_sensitive, whole_words, words_only):
   if words_only and not is_word(text): return
@@ -149,8 +153,12 @@ def find_all_occurrences(ed, text, case_sensitive, whole_words, words_only):
 
   return res
 
+
 def get_word_under_caret(ed):
-  '''Возвращает кортеж (слово_под_кареткой, (x1, y1, x2, y2)) (не учитывая, есть выделение или нет).'''
+  '''
+  Gets tuple (word_under_caret, (x1, y1, x2, y2))
+  Don't consider, is selection exist
+  '''
 
   x1, y1, x2 = ed.get_carets()[0][:3]
   y2 = y1
@@ -186,17 +194,20 @@ def get_word_under_caret(ed):
 
   return word_under_caret, (x1, y1, x2, y2)
 
+
 def _get_current_text(ed):
   caret_pos = ed.get_carets()[0]
   x1, y1, x2, y2 = caret_pos
-  is_selection = not ((x1, y1) == (x2, y2) or x2 == -1)
+  is_selection = y2>=0
   current_text = ''
 
   if is_selection:
-    if opt.SEL_ALLOW: current_text = ed.get_text_sel()
-    else: return
+    if opt.SEL_ALLOW:
+      current_text = ed.get_text_sel()
+    else:
+      return
   else:
-    # Иногда бывает, что каретка может находится за текстом (если так настроен редактор, или ее перемещают через API).
+    # sometimes caret can be beyond text end
     temp = ed.get_text_line(y1)
     if (temp is None) or (len(temp) < x1): return
 
