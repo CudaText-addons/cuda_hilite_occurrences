@@ -1,16 +1,19 @@
 
+2017.12.01
++ add: config file option "max_lines" (default 5000) - avoid work on big files
++ add: also show menu item in Options/ Settings-plugins
+
 2017.01.27
-- fix if caret sel beyond EOF (mass replace)
+- fix: crash if caret with selection beyond EOF (mass replace)
 
 2016.07.31 (Alex)
-+ config file
-+ commd "Config" in Plugins
-
++ add: config file
++ add: command "Config" in Plugins menu
 
 Changes since original plugin:
-- Fix: if only 2 occurences exist, they're not hilited.
-- Add: hilite word under caret.
-- Add: hilite not only words but any chars.
-- Add: hilite case sensitive/insensitive.
-- Chg: color of hilite.
-- Refactor
++ refactored
++ add: hilite word under caret
++ add: hilite not only words but any chars
++ add: hilite case sensitive/insensitive
+- fix: if only 2 occurences exist, they're not hilited
+* change: color of hilite

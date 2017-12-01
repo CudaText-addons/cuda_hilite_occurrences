@@ -4,8 +4,8 @@ import cudatext as app
 import cudax_lib as apx
 
 #----------------------Settings---------------------#
-MIN_LEN  = 1 # For word or selected text.
-MAX_SIZE = 0 # In bytes. Not used yet.
+MIN_LEN = 2
+MAX_LINES = 5000
 
 CHARS = string.ascii_letters + string.digits + '_'
 
@@ -30,32 +30,34 @@ fn_ini = os.path.join(app.app_path(app.APP_DIR_SETTINGS), 'cuda_hilite_occurrenc
 
 
 def do_load_ops():
-  global MIN_LEN              
-  global SEL_ALLOW            
+  global MIN_LEN
+  global MAX_LINES
+  global SEL_ALLOW
   global SEL_ALLOW_WHITE_SPACE
-  global SEL_CASE_SENSITIVE   
-  global SEL_WORDS_ONLY       
-  global SEL_WHOLE_WORDS      
-  global CARET_ALLOW          
-  global CARET_CASE_SENSITIVE 
-  global CARET_WHOLE_WORDS    
-  global COLOR_FONT_OTHER     
-  global COLOR_BG_OTHER       
-  global COLOR_FONT_CURRENT   
-  global COLOR_BG_CURRENT     
+  global SEL_CASE_SENSITIVE
+  global SEL_WORDS_ONLY
+  global SEL_WHOLE_WORDS
+  global CARET_ALLOW
+  global CARET_CASE_SENSITIVE
+  global CARET_WHOLE_WORDS
+  global COLOR_FONT_OTHER
+  global COLOR_BG_OTHER
+  global COLOR_FONT_CURRENT
+  global COLOR_BG_CURRENT
 
-  MIN_LEN               = int(app.ini_read(fn_ini, 'op', 'min_len', '1'))
-  
+  MIN_LEN               = int(app.ini_read(fn_ini, 'op', 'min_len', '2'))
+  MAX_LINES             = int(app.ini_read(fn_ini, 'op', 'max_lines', '5000'))
+
   SEL_ALLOW             = app.ini_read(fn_ini, 'op', 'sel_allow', '1')=='1'
   SEL_ALLOW_WHITE_SPACE = app.ini_read(fn_ini, 'op', 'sel_allow_white_space', '0')=='1'
   SEL_CASE_SENSITIVE    = app.ini_read(fn_ini, 'op', 'sel_case_sensitive', '0')=='1'
   SEL_WORDS_ONLY        = app.ini_read(fn_ini, 'op', 'sel_words_only', '0')=='1'
   SEL_WHOLE_WORDS       = app.ini_read(fn_ini, 'op', 'sel_whole_words', '0')=='1'
-  
+
   CARET_ALLOW           = app.ini_read(fn_ini, 'op', 'caret_allow', '1')=='1'
   CARET_CASE_SENSITIVE  = app.ini_read(fn_ini, 'op', 'caret_case_sensitive', '1')=='1'
   CARET_WHOLE_WORDS     = app.ini_read(fn_ini, 'op', 'caret_whole_words', '1')=='1'
-  
+
   COLOR_FONT_OTHER      = apx.html_color_to_int(app.ini_read(fn_ini, 'colors', 'font_other', int_to_html(0x000000)))
   COLOR_BG_OTHER        = apx.html_color_to_int(app.ini_read(fn_ini, 'colors', 'bg_other', int_to_html(0x80ffff)))
   COLOR_FONT_CURRENT    = apx.html_color_to_int(app.ini_read(fn_ini, 'colors', 'font_current', int_to_html(0x000000)))
@@ -70,21 +72,22 @@ def int_to_html(n):
 
 def bool_str(b):
   return '1' if b else '0'
-  
+
 
 def do_save_ops():
   app.ini_write(fn_ini, 'op', 'min_len', str(MIN_LEN))
-  
+  app.ini_write(fn_ini, 'op', 'max_lines', str(MAX_LINES))
+
   app.ini_write(fn_ini, 'op', 'sel_allow', bool_str(SEL_ALLOW))
   app.ini_write(fn_ini, 'op', 'sel_allow_white_space', bool_str(SEL_ALLOW_WHITE_SPACE))
   app.ini_write(fn_ini, 'op', 'sel_case_sensitive', bool_str(SEL_CASE_SENSITIVE))
   app.ini_write(fn_ini, 'op', 'sel_words_only', bool_str(SEL_WORDS_ONLY))
   app.ini_write(fn_ini, 'op', 'sel_whole_words', bool_str(SEL_WHOLE_WORDS))
-  
+
   app.ini_write(fn_ini, 'op', 'caret_allow', bool_str(CARET_ALLOW))
   app.ini_write(fn_ini, 'op', 'caret_case_sensitive', bool_str(CARET_CASE_SENSITIVE))
   app.ini_write(fn_ini, 'op', 'caret_whole_words', bool_str(CARET_WHOLE_WORDS))
-  
+
   app.ini_write(fn_ini, 'colors', 'font_other', int_to_html(COLOR_FONT_OTHER))
   app.ini_write(fn_ini, 'colors', 'bg_other', int_to_html(COLOR_BG_OTHER))
   app.ini_write(fn_ini, 'colors', 'font_current', int_to_html(COLOR_FONT_CURRENT))
@@ -94,7 +97,7 @@ def do_save_ops():
 class Command:
   def __init__(self):
     do_load_ops()
-    
+
   def config(self):
     do_save_ops()
     if os.path.isfile(fn_ini):
@@ -105,12 +108,10 @@ class Command:
   def on_caret(self, ed_self):
     ed_self.attr(app.MARKERS_DELETE_BY_TAG, MARKTAG)
 
-    # TODO: ...
-    if MAX_SIZE: pass
-    #  if MAX_SIZE < ??? : return
+    if ed_self.get_line_count()>MAX_LINES:
+        return
 
     current_text = _get_current_text(ed_self) # if not (SEL_ALLOW or CARET_ALLOW): bool(current_text) == False
-
     if not current_text: return
 
     text, caret_pos, is_selection = current_text

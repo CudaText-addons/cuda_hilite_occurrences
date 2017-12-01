@@ -13,3 +13,4 @@ events=on_caret
 section=commands
 caption=Hilite Occurrences\Config
 method=config
+menu=op

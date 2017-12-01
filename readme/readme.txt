@@ -1,5 +1,8 @@
 ﻿Plugin for CudaText.
-Based on Alexey's plugin "Hilite all occurences".
-Changes by myCrack, Alexey.
+It highlights all occurences of current word (under 1st caret), or selected text, with custom background color.
+It has "Config" command in "Options/ Settings-plugins" menu, which opens config file.
 
-It highlights current word (under 1st caret) or selected word, all occurences in file, with custom color.
+Based on Alexey's plugin "Hilite all occurences".
+Forked/changed by myCrack, then continued by Alexey.
+
+License: MIT
