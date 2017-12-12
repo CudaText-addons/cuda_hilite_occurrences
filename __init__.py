@@ -4,9 +4,11 @@ import cudatext as app
 from .html_color import *
 from . import opt
 
-CHARS = string.ascii_letters + string.digits + '_'
 MARKTAG = 101 #uniq value for all markers plugins
 fn_ini = os.path.join(app.app_path(app.APP_DIR_SETTINGS), 'cuda_hilite_occurrences.ini')
+
+CHARS = string.ascii_letters + string.digits + '_$&'
+# $& to support PHP variables
 
 
 def do_load_ops():

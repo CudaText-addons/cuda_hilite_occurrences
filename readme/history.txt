@@ -1,4 +1,7 @@
 
+2017.12.10
++ add: support PHP variables: $& are word chars
+
 2017.12.01
 + add: config file option "max_lines" (default 5000) - avoid work on big files
 + add: also show menu item in Options/ Settings-plugins
