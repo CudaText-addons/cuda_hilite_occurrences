@@ -1,4 +1,7 @@
 
+2018.02.24
+* hide menu item in Plugins
+
 2017.12.10
 + add: support PHP variables: $& are word chars
 
