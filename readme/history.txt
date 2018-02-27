@@ -1,4 +1,7 @@
 
+2018.02.27
++ add: clear statusbar if only 1 match found (and none hilited)
+
 2018.02.24
 * hide menu item in Plugins
 

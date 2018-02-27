@@ -102,7 +102,9 @@ class Command:
 
     items = find_all_occurrences(ed_self, text, case_sensitive, whole_words, words_only)
 
-    if not items or (len(items) == 1 and items[0] == (x0, y1)): return
+    if not items or (len(items) == 1 and items[0] == (x0, y1)):
+        app.msg_status('')
+        return
 
     for item in items:
       if item == (x0, y0): continue
