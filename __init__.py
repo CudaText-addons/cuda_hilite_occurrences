@@ -16,6 +16,7 @@ fn_ini = os.path.join(app.app_path(app.APP_DIR_SETTINGS), 'cuda_hilite_occurrenc
 def do_load_ops():
   opt.MIN_LEN               = int(app.ini_read(fn_ini, 'op', 'min_len', '2'))
   opt.MAX_LINES             = int(app.ini_read(fn_ini, 'op', 'max_lines', '5000'))
+  opt.MAX_LEN               = int(app.ini_read(fn_ini, 'op', 'max_len', '2000'))
 
   opt.SEL_ALLOW             = app.ini_read(fn_ini, 'op', 'sel_allow', '1')=='1'
   opt.SEL_ALLOW_WHITE_SPACE = app.ini_read(fn_ini, 'op', 'sel_allow_white_space', '0')=='1'
@@ -40,6 +41,7 @@ def bool_str(b):
 def do_save_ops():
   app.ini_write(fn_ini, 'op', 'min_len', str(opt.MIN_LEN))
   app.ini_write(fn_ini, 'op', 'max_lines', str(opt.MAX_LINES))
+  app.ini_write(fn_ini, 'op', 'max_len', str(opt.MAX_LEN))
 
   app.ini_write(fn_ini, 'op', 'sel_allow', bool_str(opt.SEL_ALLOW))
   app.ini_write(fn_ini, 'op', 'sel_allow_white_space', bool_str(opt.SEL_ALLOW_WHITE_SPACE))
@@ -134,6 +136,7 @@ def find_all_occurrences(ed, text, case_sensitive, whole_words, words_only):
   for y in range(ed.get_line_count()):
     line = ed.get_text_line(y)
     if not line: continue
+    if len(line) > opt.MAX_LEN: continue
 
     if not case_sensitive: line = line.lower()
 
@@ -171,6 +174,7 @@ def get_word_under_caret(ed):
 
   l_char = r_char = ''
   current_line = ed.get_text_line(y1)
+  if len(current_line) > opt.MAX_LEN: return
 
   if current_line:
     x = x1
@@ -216,6 +220,7 @@ def _get_current_text(ed):
     # sometimes caret can be beyond text end
     temp = ed.get_text_line(y1)
     if (temp is None) or (len(temp) < x1): return
+    if len(temp) > opt.MAX_LEN: return
 
     if opt.CARET_ALLOW:
       temp = get_word_under_caret(ed)

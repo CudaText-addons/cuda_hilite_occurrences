@@ -1,5 +1,8 @@
 
 2018.03.04
++ add: option "max_len" (2000) to not search inside too huge lines
+
+2018.03.04
 + add: detection of Unicode words too (e.g. Russian)
 
 2018.02.27
