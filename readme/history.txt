@@ -1,4 +1,7 @@
 
+2018.03.04
++ add: detection of Unicode words too (e.g. Russian)
+
 2018.02.27
 + add: clear statusbar if only 1 match found (and none hilited)
 
