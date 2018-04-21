@@ -33,7 +33,7 @@ def do_load_ops():
   opt.CARET_WHOLE_WORDS     = str_to_bool(app.ini_read(fn_ini, 'op', 'caret_whole_words', '1'))
 
   opt.COLOR_FONT_OTHER      = appx.html_color_to_int(app.ini_read(fn_ini, 'colors', 'font_other', '#000'))
-  opt.COLOR_BG_OTHER        = appx.html_color_to_int(app.ini_read(fn_ini, 'colors', 'bg_other', '#fff'))
+  opt.COLOR_BG_OTHER        = appx.html_color_to_int(app.ini_read(fn_ini, 'colors', 'bg_other', '#ff0'))
   opt.COLOR_FONT_CURRENT    = appx.html_color_to_int(app.ini_read(fn_ini, 'colors', 'font_current', '#000'))
   opt.COLOR_BG_CURRENT      = appx.html_color_to_int(app.ini_read(fn_ini, 'colors', 'bg_current', '#e4c0e4'))
 
