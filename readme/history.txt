@@ -1,4 +1,7 @@
 
+2018.04.21
++ add: option "use_nearest_line_count" - if set to 0, then plugin finds matches only on visible screen part; set big value to find matches in entire file
+
 2018.03.04
 + add: option "max_len" (2000) to not search inside too huge lines
 

@@ -129,12 +129,19 @@ def is_word(s):
 
 
 def find_all_occurrences(ed, text, case_sensitive, whole_words, words_only):
+  '''
+  Finding matches to hilite
+  '''
   if words_only and not is_word(text): return
 
   if not case_sensitive: text = text.lower()
 
+  # don't handle entire file, handle only range
+  line_min = max(0, ed.get_prop(app.PROP_LINE_TOP) - opt.USE_NEAREST_LINE_COUNT)
+  line_max = min(ed.get_line_count()-1, ed.get_prop(app.PROP_LINE_BOTTOM) + opt.USE_NEAREST_LINE_COUNT)
+
   res = []
-  for y in range(ed.get_line_count()):
+  for y in range(line_min, line_max+1):
     line = ed.get_text_line(y)
     if not line: continue
     if len(line) > opt.MAX_LINE_LEN: continue
