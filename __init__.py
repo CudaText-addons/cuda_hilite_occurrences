@@ -1,7 +1,7 @@
 ﻿import os
 import string
 import cudatext as app
-from .html_color import *
+import cudax_lib as appx
 from . import opt
 import unicodedata as ud
 
@@ -32,10 +32,10 @@ def do_load_ops():
   opt.CARET_CASE_SENSITIVE  = str_to_bool(app.ini_read(fn_ini, 'op', 'caret_case_sensitive', '1'))
   opt.CARET_WHOLE_WORDS     = str_to_bool(app.ini_read(fn_ini, 'op', 'caret_whole_words', '1'))
 
-  opt.COLOR_FONT_OTHER      = html_color_to_int(app.ini_read(fn_ini, 'colors', 'font_other', int_to_html(0x000000)))
-  opt.COLOR_BG_OTHER        = html_color_to_int(app.ini_read(fn_ini, 'colors', 'bg_other', int_to_html(0x80ffff)))
-  opt.COLOR_FONT_CURRENT    = html_color_to_int(app.ini_read(fn_ini, 'colors', 'font_current', int_to_html(0x000000)))
-  opt.COLOR_BG_CURRENT      = html_color_to_int(app.ini_read(fn_ini, 'colors', 'bg_current', int_to_html(0xe3c1e3)))
+  opt.COLOR_FONT_OTHER      = appx.html_color_to_int(app.ini_read(fn_ini, 'colors', 'font_other', '#000'))
+  opt.COLOR_BG_OTHER        = appx.html_color_to_int(app.ini_read(fn_ini, 'colors', 'bg_other', '#fff'))
+  opt.COLOR_FONT_CURRENT    = appx.html_color_to_int(app.ini_read(fn_ini, 'colors', 'font_current', '#000'))
+  opt.COLOR_BG_CURRENT      = appx.html_color_to_int(app.ini_read(fn_ini, 'colors', 'bg_current', '#e4c0e4'))
 
 
 def do_save_ops():
@@ -54,10 +54,10 @@ def do_save_ops():
   app.ini_write(fn_ini, 'op', 'caret_case_sensitive', bool_to_str(opt.CARET_CASE_SENSITIVE))
   app.ini_write(fn_ini, 'op', 'caret_whole_words', bool_to_str(opt.CARET_WHOLE_WORDS))
 
-  app.ini_write(fn_ini, 'colors', 'font_other', int_to_html(opt.COLOR_FONT_OTHER))
-  app.ini_write(fn_ini, 'colors', 'bg_other', int_to_html(opt.COLOR_BG_OTHER))
-  app.ini_write(fn_ini, 'colors', 'font_current', int_to_html(opt.COLOR_FONT_CURRENT))
-  app.ini_write(fn_ini, 'colors', 'bg_current', int_to_html(opt.COLOR_BG_CURRENT))
+  app.ini_write(fn_ini, 'colors', 'font_other', appx.int_to_html_color(opt.COLOR_FONT_OTHER))
+  app.ini_write(fn_ini, 'colors', 'bg_other', appx.int_to_html_color(opt.COLOR_BG_OTHER))
+  app.ini_write(fn_ini, 'colors', 'font_current', appx.int_to_html_color(opt.COLOR_FONT_CURRENT))
+  app.ini_write(fn_ini, 'colors', 'bg_current', appx.int_to_html_color(opt.COLOR_BG_CURRENT))
 
 
 class Command:
