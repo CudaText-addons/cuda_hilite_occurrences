@@ -1,6 +1,7 @@
 MIN_LEN = 2
 MAX_LINES = 5000
 MAX_LINE_LEN = 2000
+USE_NEAREST_LINE_COUNT = 10000
 
 SEL_ALLOW             = True  # Hilite all occurrences of selected text.
 SEL_ALLOW_WHITE_SPACE = False # Hilite spaces there located in begin or end of selection

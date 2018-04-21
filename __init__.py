@@ -12,21 +12,25 @@ CHARS = string.ascii_letters + string.digits + '_$' + unicode_letters
 MARKTAG = 101 #uniq value for all markers plugins
 fn_ini = os.path.join(app.app_path(app.APP_DIR_SETTINGS), 'cuda_hilite_occurrences.ini')
 
+def bool_to_str(v): return '1' if v else '0'
+def str_to_bool(s): return s=='1'
+
 
 def do_load_ops():
   opt.MIN_LEN               = int(app.ini_read(fn_ini, 'op', 'min_len', '2'))
   opt.MAX_LINES             = int(app.ini_read(fn_ini, 'op', 'max_lines', '5000'))
   opt.MAX_LINE_LEN          = int(app.ini_read(fn_ini, 'op', 'max_line_len', '2000'))
+  opt.USE_NEAREST_LINE_COUNT = int(app.ini_read(fn_ini, 'op', 'use_nearest_line_count', '10000'))
 
-  opt.SEL_ALLOW             = app.ini_read(fn_ini, 'op', 'sel_allow', '1')=='1'
-  opt.SEL_ALLOW_WHITE_SPACE = app.ini_read(fn_ini, 'op', 'sel_allow_white_space', '0')=='1'
-  opt.SEL_CASE_SENSITIVE    = app.ini_read(fn_ini, 'op', 'sel_case_sensitive', '0')=='1'
-  opt.SEL_WORDS_ONLY        = app.ini_read(fn_ini, 'op', 'sel_words_only', '0')=='1'
-  opt.SEL_WHOLE_WORDS       = app.ini_read(fn_ini, 'op', 'sel_whole_words', '0')=='1'
+  opt.SEL_ALLOW             = str_to_bool(app.ini_read(fn_ini, 'op', 'sel_allow', '1'))
+  opt.SEL_ALLOW_WHITE_SPACE = str_to_bool(app.ini_read(fn_ini, 'op', 'sel_allow_white_space', '0'))
+  opt.SEL_CASE_SENSITIVE    = str_to_bool(app.ini_read(fn_ini, 'op', 'sel_case_sensitive', '0'))
+  opt.SEL_WORDS_ONLY        = str_to_bool(app.ini_read(fn_ini, 'op', 'sel_words_only', '0'))
+  opt.SEL_WHOLE_WORDS       = str_to_bool(app.ini_read(fn_ini, 'op', 'sel_whole_words', '0'))
 
-  opt.CARET_ALLOW           = app.ini_read(fn_ini, 'op', 'caret_allow', '1')=='1'
-  opt.CARET_CASE_SENSITIVE  = app.ini_read(fn_ini, 'op', 'caret_case_sensitive', '1')=='1'
-  opt.CARET_WHOLE_WORDS     = app.ini_read(fn_ini, 'op', 'caret_whole_words', '1')=='1'
+  opt.CARET_ALLOW           = str_to_bool(app.ini_read(fn_ini, 'op', 'caret_allow', '1'))
+  opt.CARET_CASE_SENSITIVE  = str_to_bool(app.ini_read(fn_ini, 'op', 'caret_case_sensitive', '1'))
+  opt.CARET_WHOLE_WORDS     = str_to_bool(app.ini_read(fn_ini, 'op', 'caret_whole_words', '1'))
 
   opt.COLOR_FONT_OTHER      = html_color_to_int(app.ini_read(fn_ini, 'colors', 'font_other', int_to_html(0x000000)))
   opt.COLOR_BG_OTHER        = html_color_to_int(app.ini_read(fn_ini, 'colors', 'bg_other', int_to_html(0x80ffff)))
@@ -34,24 +38,21 @@ def do_load_ops():
   opt.COLOR_BG_CURRENT      = html_color_to_int(app.ini_read(fn_ini, 'colors', 'bg_current', int_to_html(0xe3c1e3)))
 
 
-def bool_str(b):
-  return '1' if b else '0'
-
-
 def do_save_ops():
   app.ini_write(fn_ini, 'op', 'min_len', str(opt.MIN_LEN))
   app.ini_write(fn_ini, 'op', 'max_lines', str(opt.MAX_LINES))
   app.ini_write(fn_ini, 'op', 'max_line_len', str(opt.MAX_LINE_LEN))
+  app.ini_write(fn_ini, 'op', 'use_nearest_line_count', str(opt.USE_NEAREST_LINE_COUNT))
 
-  app.ini_write(fn_ini, 'op', 'sel_allow', bool_str(opt.SEL_ALLOW))
-  app.ini_write(fn_ini, 'op', 'sel_allow_white_space', bool_str(opt.SEL_ALLOW_WHITE_SPACE))
-  app.ini_write(fn_ini, 'op', 'sel_case_sensitive', bool_str(opt.SEL_CASE_SENSITIVE))
-  app.ini_write(fn_ini, 'op', 'sel_words_only', bool_str(opt.SEL_WORDS_ONLY))
-  app.ini_write(fn_ini, 'op', 'sel_whole_words', bool_str(opt.SEL_WHOLE_WORDS))
+  app.ini_write(fn_ini, 'op', 'sel_allow', bool_to_str(opt.SEL_ALLOW))
+  app.ini_write(fn_ini, 'op', 'sel_allow_white_space', bool_to_str(opt.SEL_ALLOW_WHITE_SPACE))
+  app.ini_write(fn_ini, 'op', 'sel_case_sensitive', bool_to_str(opt.SEL_CASE_SENSITIVE))
+  app.ini_write(fn_ini, 'op', 'sel_words_only', bool_to_str(opt.SEL_WORDS_ONLY))
+  app.ini_write(fn_ini, 'op', 'sel_whole_words', bool_to_str(opt.SEL_WHOLE_WORDS))
 
-  app.ini_write(fn_ini, 'op', 'caret_allow', bool_str(opt.CARET_ALLOW))
-  app.ini_write(fn_ini, 'op', 'caret_case_sensitive', bool_str(opt.CARET_CASE_SENSITIVE))
-  app.ini_write(fn_ini, 'op', 'caret_whole_words', bool_str(opt.CARET_WHOLE_WORDS))
+  app.ini_write(fn_ini, 'op', 'caret_allow', bool_to_str(opt.CARET_ALLOW))
+  app.ini_write(fn_ini, 'op', 'caret_case_sensitive', bool_to_str(opt.CARET_CASE_SENSITIVE))
+  app.ini_write(fn_ini, 'op', 'caret_whole_words', bool_to_str(opt.CARET_WHOLE_WORDS))
 
   app.ini_write(fn_ini, 'colors', 'font_other', int_to_html(opt.COLOR_FONT_OTHER))
   app.ini_write(fn_ini, 'colors', 'bg_other', int_to_html(opt.COLOR_BG_OTHER))
