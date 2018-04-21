@@ -1,2 +1,3 @@
 __pycache__/
-/cuda_hilite_occurrences.zip
+*.zip
+v.inf
