@@ -3,6 +3,7 @@ import string
 import cudatext as app
 import cudax_lib as appx
 from . import opt
+from .getline import get_line
 import unicodedata as ud
 
 all_unicode = [chr(i) for i in range(0x10000)]
@@ -19,7 +20,6 @@ def str_to_bool(s): return s=='1'
 def do_load_ops():
   opt.MIN_LEN               = int(app.ini_read(fn_ini, 'op', 'min_len', '2'))
   opt.MAX_LINES             = int(app.ini_read(fn_ini, 'op', 'max_lines', '5000'))
-  opt.MAX_LINE_LEN          = int(app.ini_read(fn_ini, 'op', 'max_line_len', '2000'))
   opt.USE_NEAREST_LINE_COUNT = int(app.ini_read(fn_ini, 'op', 'use_nearest_line_count', '10000'))
 
   opt.SEL_ALLOW             = str_to_bool(app.ini_read(fn_ini, 'op', 'sel_allow', '1'))
@@ -41,7 +41,6 @@ def do_load_ops():
 def do_save_ops():
   app.ini_write(fn_ini, 'op', 'min_len', str(opt.MIN_LEN))
   app.ini_write(fn_ini, 'op', 'max_lines', str(opt.MAX_LINES))
-  app.ini_write(fn_ini, 'op', 'max_line_len', str(opt.MAX_LINE_LEN))
   app.ini_write(fn_ini, 'op', 'use_nearest_line_count', str(opt.USE_NEAREST_LINE_COUNT))
 
   app.ini_write(fn_ini, 'op', 'sel_allow', bool_to_str(opt.SEL_ALLOW))
@@ -142,9 +141,9 @@ def find_all_occurrences(ed, text, case_sensitive, whole_words, words_only):
 
   res = []
   for y in range(line_min, line_max+1):
-    line = ed.get_text_line(y)
+    line = get_line(ed, y)
     if not line: continue
-    if len(line) > opt.MAX_LINE_LEN: continue
+    #if len(line) > opt.MAX_LINE_LEN: continue
 
     if not case_sensitive: line = line.lower()
 
@@ -181,8 +180,8 @@ def get_word_under_caret(ed):
   y2 = y1
 
   l_char = r_char = ''
-  current_line = ed.get_text_line(y1)
-  if len(current_line) > opt.MAX_LINE_LEN: return
+  current_line = get_line(ed, y1)
+  #if len(current_line) > opt.MAX_LINE_LEN: return
 
   if current_line:
     x = x1
@@ -226,9 +225,9 @@ def _get_current_text(ed):
       return
   else:
     # sometimes caret can be beyond text end
-    temp = ed.get_text_line(y1)
+    temp = get_line(ed, y1)
     if (temp is None) or (len(temp) < x1): return
-    if len(temp) > opt.MAX_LINE_LEN: return
+    #if len(temp) > opt.MAX_LINE_LEN: return
 
     if opt.CARET_ALLOW:
       temp = get_word_under_caret(ed)

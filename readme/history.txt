@@ -1,4 +1,8 @@
 
+2019.02.27
++ add: on new CudaText 1.76+, plugin skips too long lines (len>1000)
+* removed option "max_len"
+
 2018.04.21
 + add: option "use_nearest_line_count" - if set to 0, then plugin finds matches only on visible screen part; set big value to find matches in entire file
 
