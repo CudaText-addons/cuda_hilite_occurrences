@@ -3,6 +3,8 @@ It highlights all occurences of current word (under first caret), or selected te
 
 It has config file with many options - call menu item in "Options / Settings-plugins / Highlight Occurences".
 
+- Option "min_len": minimal length of fragments to find.
+- Option "max_lines": maximal count of lines in document, for which plugin is active.
 - Options "sel_..." allow to activate plugin when selection is changed.
 - Options "caret_..." allow to activate plugin when only caret position is changed.
 - Option "sel_words_only": allow to handle selection only if it's word.
