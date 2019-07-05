@@ -1,13 +1,14 @@
 [info]
 title=Highlight Occurrences
-desc=Highlights (with background color) all occurrences of selected text or word under caret
+desc=Highlights (with background color) all occurrences of current/selected word
 type=cudatext-plugin
 subdir=cuda_hilite_occurrences
 homepage=https://github.com/CudaText-addons/cuda_hilite_occurrences
+api=1.0.275
 
 [item1]
 section=events
-events=on_caret
+events=on_caret,on_save
 
 [item2]
 section=commands

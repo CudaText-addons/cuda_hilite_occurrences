@@ -1,6 +1,7 @@
 
 2019.07.05
 + add: plugin auto re-reads config file, when it's saved
+* change: plugin requires CudaText 1.76+
 
 2019.02.27
 + add: on new CudaText 1.76+, plugin skips too long lines (len>1000)

@@ -3,7 +3,6 @@ import string
 import cudatext as app
 import cudax_lib as appx
 from . import opt
-from .getline import get_line
 import unicodedata as ud
 
 all_unicode = [chr(i) for i in range(0x10000)]
@@ -16,6 +15,10 @@ fn_ini = os.path.join(app.app_path(app.APP_DIR_SETTINGS), 'cuda_hilite_occurrenc
 def bool_to_str(v): return '1' if v else '0'
 def str_to_bool(s): return s=='1'
 
+
+def get_line(ed, n):
+  # limit max length of line
+  return ed.get_text_line(n, 500)
 
 def do_load_ops():
   print('Highlight Occurrences: load options')
