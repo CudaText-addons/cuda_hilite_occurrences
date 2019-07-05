@@ -18,6 +18,8 @@ def str_to_bool(s): return s=='1'
 
 
 def do_load_ops():
+  print('Highlight Occurrences: load options')
+
   opt.MIN_LEN               = int(app.ini_read(fn_ini, 'op', 'min_len', '2'))
   opt.MAX_LINES             = int(app.ini_read(fn_ini, 'op', 'max_lines', '5000'))
   opt.USE_NEAREST_LINE_COUNT = int(app.ini_read(fn_ini, 'op', 'use_nearest_line_count', '10000'))
@@ -60,9 +62,14 @@ def do_save_ops():
 
 
 class Command:
+
   def __init__(self):
     do_load_ops()
 
+  def on_save(self, ed_self):
+    fn = ed_self.get_filename()
+    if fn==fn_ini:
+      do_load_ops()
 
   def config(self):
     do_save_ops()
@@ -73,6 +80,7 @@ class Command:
 
 
   def on_caret(self, ed_self):
+
     ed_self.attr(app.MARKERS_DELETE_BY_TAG, MARKTAG)
 
     if ed_self.get_line_count()>opt.MAX_LINES:
