@@ -1,5 +1,7 @@
 
 2019.07.05
++ add: option "lexers_allowed" (see readme)
++ add: option "lexers_disabled" (see readme)
 + add: plugin auto re-reads config file, when it's saved
 * change: plugin requires CudaText 1.76+
 

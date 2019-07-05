@@ -42,6 +42,8 @@ def do_load_ops():
   opt.COLOR_FONT_CURRENT    = appx.html_color_to_int(app.ini_read(fn_ini, 'colors', 'font_current', '#000'))
   opt.COLOR_BG_CURRENT      = appx.html_color_to_int(app.ini_read(fn_ini, 'colors', 'bg_current', '#e4c0e4'))
 
+  opt.LEXERS_ALLOWED = app.ini_read(fn_ini, 'op', 'lexers_allowed', '')
+  opt.LEXERS_DISABLED = app.ini_read(fn_ini, 'op', 'lexers_disabled', '')
 
 def do_save_ops():
   app.ini_write(fn_ini, 'op', 'min_len', str(opt.MIN_LEN))
@@ -63,6 +65,21 @@ def do_save_ops():
   app.ini_write(fn_ini, 'colors', 'font_current', appx.int_to_html_color(opt.COLOR_FONT_CURRENT))
   app.ini_write(fn_ini, 'colors', 'bg_current', appx.int_to_html_color(opt.COLOR_BG_CURRENT))
 
+  app.ini_write(fn_ini, 'op', 'lexers_allowed', opt.LEXERS_ALLOWED)
+  app.ini_write(fn_ini, 'op', 'lexers_disabled', opt.LEXERS_DISABLED)
+
+
+def is_lexer_ok(s):
+
+  if opt.LEXERS_DISABLED:
+    if ','+s+',' in ','+opt.LEXERS_DISABLED+',':
+      return False
+
+  if opt.LEXERS_ALLOWED:
+    return ','+s+',' in ','+opt.LEXERS_ALLOWED+','
+  else:
+    return True
+
 
 class Command:
 
@@ -83,6 +100,12 @@ class Command:
 
 
   def on_caret(self, ed_self):
+
+    lex = ed_self.get_prop(app.PROP_LEXER_FILE)
+    if not lex:
+      lex = '-'
+    if not is_lexer_ok(lex):
+      return
 
     ed_self.attr(app.MARKERS_DELETE_BY_TAG, MARKTAG)
 
