@@ -7,7 +7,7 @@ It has config file with many options - call menu item in "Options / Settings-plu
 - Options "caret_..." allow to activate plugin when only caret position is changed.
 - Option "sel_words_only": allow to handle selection only if it's word.
 - Option "sel_whole_words": for selection, find matches only if they are words.
-- Option "use_nearest_line_count": if value=0 - only visible part of text is handled, if big value - big part of text (around visible text) is handled. To find matches in entire file of e.g. 200K lines, set option to 200000.
+- Option "use_nearest_line_count": if value=0 - only visible part of text is handled, if big value - big part of text (around visible text) is handled. To find matches in entire huge file (not recommended, it's slow), set option to huge value, e.g. 200000.
 
 
 Authors:
