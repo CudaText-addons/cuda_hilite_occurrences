@@ -1,6 +1,6 @@
 
 2019.10.07
-+ add: respect CudaText option "nonword_char", make plugin faster
++ add: respect CudaText option "nonword_chars", make plugin faster
 
 2019.07.05
 + add: option "lexers_allowed" (see readme)
