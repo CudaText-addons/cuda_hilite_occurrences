@@ -3,7 +3,8 @@ import cudatext as app
 import cudax_lib as appx
 from . import opt
 
-NONWORD_CHARS = '''-+*=/\()[]{}<>"'.,:;~?!@#$%^&|`…'''
+NONWORD_DEF = '''-+*=/\()[]{}<>"'.,:;~?!@#$%^&|`…'''
+NONWORD = {}
 MARKTAG = 101 #uniq value for all markers plugins
 fn_ini = os.path.join(app.app_path(app.APP_DIR_SETTINGS), 'cuda_hilite_occurrences.ini')
 
@@ -150,9 +151,14 @@ class Command:
         app.msg_status('Matches hilited: {}'.format(len(items)))
 
 
-def is_word(s):
+def is_word(s, lexer):
+    bads = NONWORD.get(lexer)
+    if bads is None:
+        bads = appx.get_opt('nonword_chars', NONWORD_DEF, appx.CONFIG_LEV_ALL, lexer=lexer)
+        NONWORD[lexer] = bads
+
     for ch in s:
-        if ch in NONWORD_CHARS:
+        if ch in bads:
             return False
     return True
 
@@ -161,7 +167,8 @@ def find_all_occurrences(ed, text, case_sensitive, whole_words, words_only):
     '''
     Finding matches to hilite
     '''
-    if words_only and not is_word(text): return
+    lex = ed.get_prop(app.PROP_LEXER_FILE)
+    if words_only and not is_word(text, lex): return
 
     if not case_sensitive: text = text.lower()
 
@@ -184,12 +191,12 @@ def find_all_occurrences(ed, text, case_sensitive, whole_words, words_only):
             if x < 0: break
 
             if whole_words:
-                if x > 0 and is_word(line[x - 1]):
+                if x > 0 and is_word(line[x - 1], lex):
                     x += text_len + 1
                     continue
 
                 next_char = x + text_len
-                if next_char < len(line) and is_word(line[next_char]):
+                if next_char < len(line) and is_word(line[next_char], lex):
                     x += 2
                     continue
 
@@ -206,6 +213,7 @@ def get_word_under_caret(ed):
     Don't consider, is selection exist
     '''
 
+    lex = ed.get_prop(app.PROP_LEXER_CARET)
     x1, y1, x2 = ed.get_carets()[0][:3]
     y2 = y1
 
@@ -218,20 +226,20 @@ def get_word_under_caret(ed):
         if x > 0:                 l_char = current_line[x - 1]
         if x < len(current_line): r_char = current_line[x]
 
-        l_char, r_char = is_word(l_char), is_word(r_char)
+        l_char, r_char = is_word(l_char, lex), is_word(r_char, lex)
 
         if not (l_char or r_char): return
 
         if l_char:
             for x1 in range(x - 1, -1, -1):
-                if is_word(current_line[x1]): continue
+                if is_word(current_line[x1], lex): continue
                 else: break
             else: x1 = -1
             x1 += 1
 
         if r_char:
             for x2 in range(x + 1, len(current_line)):
-                if is_word(current_line[x2]): continue
+                if is_word(current_line[x2], lex): continue
                 else: break
             else: x2 = len(current_line)
         else: x2 = x
