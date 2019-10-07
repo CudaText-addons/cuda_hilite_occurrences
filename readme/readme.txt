@@ -15,6 +15,6 @@ It has config file with many options - call menu item in "Options / Settings-plu
 
 
 Authors:
-  Alexey (CudaText)
+  Alexey Torgashin (CudaText)
   myCrack (at Github)
 License: MIT
