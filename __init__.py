@@ -11,13 +11,16 @@ fn_ini = os.path.join(app.app_path(app.APP_DIR_SETTINGS), 'cuda_hilite_occurrenc
 def bool_to_str(v): return '1' if v else '0'
 def str_to_bool(s): return s=='1'
 
+def log(s):
+    pass
+    #print(s)
 
 def get_line(ed, n):
     # limit max length of line
     return ed.get_text_line(n, 500)
 
 def do_load_ops():
-    print('Highlight Occurrences: load options')
+    log('Highlight Occurrences: load options')
 
     opt.MIN_LEN               = int(app.ini_read(fn_ini, 'op', 'min_len', '2'))
     opt.MAX_LINES             = int(app.ini_read(fn_ini, 'op', 'max_lines', '5000'))
@@ -158,7 +161,7 @@ def is_word(s, lexer):
         NONWORD[lexer] = bads
 
     for ch in s:
-        if ch in bads:
+        if ch in ' \t'+bads:
             return False
     return True
 
@@ -168,7 +171,9 @@ def find_all_occurrences(ed, text, case_sensitive, whole_words, words_only):
     Finding matches to hilite
     '''
     lex = ed.get_prop(app.PROP_LEXER_FILE)
-    if words_only and not is_word(text, lex): return
+    if words_only and not is_word(text, lex):
+        log('Hilite Occur: refured to search not whole word: '+text)
+        return
 
     if not case_sensitive: text = text.lower()
 
@@ -192,11 +197,13 @@ def find_all_occurrences(ed, text, case_sensitive, whole_words, words_only):
 
             if whole_words:
                 if x > 0 and is_word(line[x - 1], lex):
+                    log('Skipped match, not whole word: "%s", pos %d, char "%s"' % (line, x, line[x - 1]))
                     x += text_len + 1
                     continue
 
                 next_char = x + text_len
                 if next_char < len(line) and is_word(line[next_char], lex):
+                    log('Skipped match, not whole word: "%s", pos %d, char "%s"' % (line, x, line[next_char]))
                     x += 2
                     continue
 
