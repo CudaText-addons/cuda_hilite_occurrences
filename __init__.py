@@ -1,14 +1,9 @@
-﻿import os
-import string
+import os
 import cudatext as app
 import cudax_lib as appx
 from . import opt
-import unicodedata as ud
 
-all_unicode = [chr(i) for i in range(0x10000)]
-unicode_letters = ''.join([c for c in all_unicode if ud.category(c) in ('Lu', 'Ll')])
-
-CHARS = string.ascii_letters + string.digits + '_$' + unicode_letters
+NONWORD_CHARS = '''-+*=/\()[]{}<>"'.,:;~?!@#$%^&|`…'''
 MARKTAG = 101 #uniq value for all markers plugins
 fn_ini = os.path.join(app.app_path(app.APP_DIR_SETTINGS), 'cuda_hilite_occurrences.ini')
 
@@ -157,7 +152,8 @@ class Command:
 
 def is_word(s):
     for ch in s:
-        if not ch in CHARS: return False
+        if ch in NONWORD_CHARS:
+            return False
     return True
 
 
