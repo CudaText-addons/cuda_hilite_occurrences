@@ -41,12 +41,19 @@ def do_load_ops():
 
     theme = app.app_proc(app.PROC_THEME_SYNTAX_DICT_GET, '')
     item_id = theme['Id']
-    item_cur = theme[opt.THEMEITEM_CURRENT]
-    item_oth = theme[opt.THEMEITEM_OTHER]
+    item_cur = theme.get(opt.THEMEITEM_CURRENT)
+    item_oth = theme.get(opt.THEMEITEM_OTHER)
+
     opt.COLOR_FONT_CURRENT = item_id['color_font']
     opt.COLOR_FONT_OTHER = opt.COLOR_FONT_CURRENT
-    opt.COLOR_BG_CURRENT = item_cur['color_back']
-    opt.COLOR_BG_OTHER = item_oth['color_back']
+
+    if item_cur and item_oth:
+        opt.COLOR_BG_CURRENT = item_cur['color_back']
+        opt.COLOR_BG_OTHER = item_oth['color_back']
+    else:
+        print('Incorrect theme item(s) "%s", "%s" in "%s"'%(opt.THEMEITEM_CURRENT, opt.THEMEITEM_OTHER, fn_ini))
+        opt.COLOR_BG_CURRENT = 0x80e080
+        opt.COLOR_BG_OTHER = 0x00e0e0
 
     opt.LEXERS_ALLOWED = app.ini_read(fn_ini, 'op', 'lexers_allowed', '')
     opt.LEXERS_DISABLED = app.ini_read(fn_ini, 'op', 'lexers_disabled', '')
