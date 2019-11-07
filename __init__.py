@@ -36,10 +36,17 @@ def do_load_ops():
     opt.CARET_CASE_SENSITIVE  = str_to_bool(app.ini_read(fn_ini, 'op', 'caret_case_sensitive', '1'))
     opt.CARET_WHOLE_WORDS     = str_to_bool(app.ini_read(fn_ini, 'op', 'caret_whole_words', '1'))
 
-    opt.COLOR_FONT_OTHER      = appx.html_color_to_int(app.ini_read(fn_ini, 'colors', 'font_other', '#000'))
-    opt.COLOR_BG_OTHER        = appx.html_color_to_int(app.ini_read(fn_ini, 'colors', 'bg_other', '#ff0'))
-    opt.COLOR_FONT_CURRENT    = appx.html_color_to_int(app.ini_read(fn_ini, 'colors', 'font_current', '#000'))
-    opt.COLOR_BG_CURRENT      = appx.html_color_to_int(app.ini_read(fn_ini, 'colors', 'bg_current', '#e4c0e4'))
+    opt.THEMEITEM_CURRENT     = app.ini_read(fn_ini, 'colors', 'theme_item_current', opt.THEMEITEM_CURRENT)
+    opt.THEMEITEM_OTHER       = app.ini_read(fn_ini, 'colors', 'theme_item_other', opt.THEMEITEM_OTHER)
+
+    theme = app.app_proc(app.PROC_THEME_SYNTAX_DICT_GET, '')
+    item_id = theme['Id']
+    item_cur = theme[opt.THEMEITEM_CURRENT]
+    item_oth = theme[opt.THEMEITEM_OTHER]
+    opt.COLOR_FONT_CURRENT = item_id['color_font']
+    opt.COLOR_FONT_OTHER = opt.COLOR_FONT_CURRENT
+    opt.COLOR_BG_CURRENT = item_cur['color_back']
+    opt.COLOR_BG_OTHER = item_oth['color_back']
 
     opt.LEXERS_ALLOWED = app.ini_read(fn_ini, 'op', 'lexers_allowed', '')
     opt.LEXERS_DISABLED = app.ini_read(fn_ini, 'op', 'lexers_disabled', '')
@@ -59,10 +66,8 @@ def do_save_ops():
     app.ini_write(fn_ini, 'op', 'caret_case_sensitive', bool_to_str(opt.CARET_CASE_SENSITIVE))
     app.ini_write(fn_ini, 'op', 'caret_whole_words', bool_to_str(opt.CARET_WHOLE_WORDS))
 
-    app.ini_write(fn_ini, 'colors', 'font_other', appx.int_to_html_color(opt.COLOR_FONT_OTHER))
-    app.ini_write(fn_ini, 'colors', 'bg_other', appx.int_to_html_color(opt.COLOR_BG_OTHER))
-    app.ini_write(fn_ini, 'colors', 'font_current', appx.int_to_html_color(opt.COLOR_FONT_CURRENT))
-    app.ini_write(fn_ini, 'colors', 'bg_current', appx.int_to_html_color(opt.COLOR_BG_CURRENT))
+    app.ini_write(fn_ini, 'colors', 'theme_item_current', opt.THEMEITEM_CURRENT)
+    app.ini_write(fn_ini, 'colors', 'theme_item_other', opt.THEMEITEM_OTHER)
 
     app.ini_write(fn_ini, 'op', 'lexers_allowed', opt.LEXERS_ALLOWED)
     app.ini_write(fn_ini, 'op', 'lexers_disabled', opt.LEXERS_DISABLED)
