@@ -1,6 +1,6 @@
 [info]
 title=Highlight Occurrences
-desc=Highlights (with background color) all occurrences of current/selected word
+desc=Highlights all occurrences of current/selected word/fragment
 type=cudatext-plugin
 subdir=cuda_hilite_occurrences
 homepage=https://github.com/CudaText-addons/cuda_hilite_occurrences
@@ -12,6 +12,6 @@ events=on_caret,on_save
 
 [item2]
 section=commands
-caption=Highlight Occurrences\Config
+caption=Highlight Occurrences\Config...
 method=config
 menu=o
