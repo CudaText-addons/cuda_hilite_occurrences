@@ -173,6 +173,18 @@ class Command:
             "lst": ALLOWED_ITEMS,
             "chp": ""
         },
+        {   "opt": "lexers_allowed",
+            "cmt": ["Comma-separated list of allowed lexers"],
+            "def": "",
+            "frm": "str",
+            "chp": ""
+        },
+        {   "opt": "lexers_disabled",
+            "cmt": ["Comma-separated list of disabled lexers"],
+            "def": "",
+            "frm": "str",
+            "chp": ""
+        },
         ]))
 
         subset = '' # Key for isolated storage on plugin settings
