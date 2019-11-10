@@ -188,7 +188,8 @@ class Command:
         subset = '' # Key for isolated storage on plugin settings
         title = 'Highlight Occurrences options'
         how = {'hide_lex_fil': True, 'stor_json': fn_config}
-        op_ed.OptEdD(path_keys_info=fn_meta, subset=subset, how=how).show(title)
+        if op_ed.OptEdD(path_keys_info=fn_meta, subset=subset, how=how).show(title):
+            do_load_ops()
 
     def on_caret(self, ed_self):
 
