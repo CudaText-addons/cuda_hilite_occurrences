@@ -164,7 +164,7 @@ class Command:
         },
         {   "opt": "theme_item_other",
             "cmt": ["Element of syntax-theme, which color is used for other found matches"],
-            "def": "SectionBG2",
+            "def": "SectionBG1",
             "frm": "strs",
             "lst": ALLOWED_ITEMS,
             "chp": ""
