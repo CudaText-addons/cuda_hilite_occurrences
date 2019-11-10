@@ -4,6 +4,7 @@ import cudatext as app
 import cudax_lib as appx
 import cuda_options_editor as op_ed
 from . import opt
+from cudax_lib import get_opt
 
 NONWORD_DEF = '''-+*=/\()[]{}<>"'.,:;~?!@#$%^&|`…'''
 NONWORD = {}
@@ -26,27 +27,22 @@ def get_line(ed, n):
 
 def do_load_ops():
     
-    if os.path.isfile(fn_config):
-        d = json.load(open(fn_config, 'r'))
-    else:
-        d = {}
+    opt.MIN_LEN               = get_opt('min_len', 2)
+    opt.MAX_LINES             = get_opt('max_lines', 5000)
+    opt.USE_NEAREST_LINE_COUNT = get_opt('nearest_count', 10000)
 
-    opt.MIN_LEN               = d.get('min_len', 2)
-    opt.MAX_LINES             = d.get('max_lines', 5000)
-    opt.USE_NEAREST_LINE_COUNT = d.get('nearest_count', 10000)
+    opt.SEL_ALLOW             = get_opt('sel_allow', True)
+    opt.SEL_ALLOW_WHITE_SPACE = get_opt('sel_allow_spaces', False)
+    opt.SEL_CASE_SENSITIVE    = get_opt('sel_case_sens', False)
+    opt.SEL_WORDS_ONLY        = get_opt('sel_words_only', False)
+    opt.SEL_WHOLE_WORDS       = get_opt('sel_whole_words', False)
 
-    opt.SEL_ALLOW             = d.get('sel_allow', True)
-    opt.SEL_ALLOW_WHITE_SPACE = d.get('sel_allow_spaces', False)
-    opt.SEL_CASE_SENSITIVE    = d.get('sel_case_sens', False)
-    opt.SEL_WORDS_ONLY        = d.get('sel_words_only', False)
-    opt.SEL_WHOLE_WORDS       = d.get('sel_whole_words', False)
+    opt.CARET_ALLOW           = get_opt('caret_allow', True)
+    opt.CARET_CASE_SENSITIVE  = get_opt('caret_case_sens', True)
+    opt.CARET_WHOLE_WORDS     = get_opt('caret_whole_words', True)
 
-    opt.CARET_ALLOW           = d.get('caret_allow', True)
-    opt.CARET_CASE_SENSITIVE  = d.get('caret_case_sens', True)
-    opt.CARET_WHOLE_WORDS     = d.get('caret_whole_words', True)
-
-    opt.THEMEITEM_CURRENT     = d.get('theme_item_current', 'SectionBG2')
-    opt.THEMEITEM_OTHER       = d.get('theme_item_other', 'SectionBG1')
+    opt.THEMEITEM_CURRENT     = get_opt('theme_item_current', 'SectionBG2')
+    opt.THEMEITEM_OTHER       = get_opt('theme_item_other', 'SectionBG1')
 
     theme = app.app_proc(app.PROC_THEME_SYNTAX_DICT_GET, '')
     item_id = theme['Id']
@@ -64,8 +60,8 @@ def do_load_ops():
         opt.COLOR_BG_CURRENT = 0x80e080
         opt.COLOR_BG_OTHER = 0x00e0e0
 
-    opt.LEXERS_ALLOWED = d.get('lexers_allowed', '')
-    opt.LEXERS_DISABLED = d.get('lexers_disabled', '')
+    opt.LEXERS_ALLOWED = get_opt('lexers_allowed', '')
+    opt.LEXERS_DISABLED = get_opt('lexers_disabled', '')
 
 
 def is_lexer_ok(s):
