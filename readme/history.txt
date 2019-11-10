@@ -1,4 +1,8 @@
 
+2019.11.10
++ add: use Options Editor to show nice config dialog
+* change: now used JSON config file name (was INI config)
+
 2019.11.07
 * change: removed 4 color options, added instead 2 options to use syntax-theme items (see CudaText dialog: Options / Settings-themes-syntax)
 

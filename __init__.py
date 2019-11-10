@@ -1,12 +1,17 @@
 import os
+import json
 import cudatext as app
 import cudax_lib as appx
+import cuda_options_editor as op_ed
 from . import opt
 
 NONWORD_DEF = '''-+*=/\()[]{}<>"'.,:;~?!@#$%^&|`…'''
 NONWORD = {}
 MARKTAG = 101 #uniq value for all markers plugins
-fn_ini = os.path.join(app.app_path(app.APP_DIR_SETTINGS), 'cuda_hilite_occurrences.ini')
+fn_config = os.path.join(app.app_path(app.APP_DIR_SETTINGS), 'cuda_hilite_occurrences.json')
+fn_meta = os.path.join(app.app_path(app.APP_DIR_SETTINGS), 'cuda_hilite_occurrences_meta.json')
+
+ALLOWED_ITEMS = ['IncludeBG1', 'IncludeBG2', 'IncludeBG3', 'IncludeBG4', 'SectionBG1', 'SectionBG2', 'SectionBG3', 'SectionBG4', 'LightBG1', 'LightBG2', 'LightBG3', 'LightBG4', 'LightBG5', ]
 
 def bool_to_str(v): return '1' if v else '0'
 def str_to_bool(s): return s=='1'
@@ -20,24 +25,28 @@ def get_line(ed, n):
     return ed.get_text_line(n, 500)
 
 def do_load_ops():
-    log('Highlight Occurrences: load options')
+    
+    if os.path.isfile(fn_config):
+        d = json.load(open(fn_config, 'r'))
+    else:
+        d = {}
 
-    opt.MIN_LEN               = int(app.ini_read(fn_ini, 'op', 'min_len', '2'))
-    opt.MAX_LINES             = int(app.ini_read(fn_ini, 'op', 'max_lines', '5000'))
-    opt.USE_NEAREST_LINE_COUNT = int(app.ini_read(fn_ini, 'op', 'use_nearest_line_count', '10000'))
+    opt.MIN_LEN               = d.get('min_len', 2)
+    opt.MAX_LINES             = d.get('max_lines', 5000)
+    opt.USE_NEAREST_LINE_COUNT = d.get('nearest_count', 10000)
 
-    opt.SEL_ALLOW             = str_to_bool(app.ini_read(fn_ini, 'op', 'sel_allow', '1'))
-    opt.SEL_ALLOW_WHITE_SPACE = str_to_bool(app.ini_read(fn_ini, 'op', 'sel_allow_white_space', '0'))
-    opt.SEL_CASE_SENSITIVE    = str_to_bool(app.ini_read(fn_ini, 'op', 'sel_case_sensitive', '0'))
-    opt.SEL_WORDS_ONLY        = str_to_bool(app.ini_read(fn_ini, 'op', 'sel_words_only', '0'))
-    opt.SEL_WHOLE_WORDS       = str_to_bool(app.ini_read(fn_ini, 'op', 'sel_whole_words', '0'))
+    opt.SEL_ALLOW             = d.get('sel_allow', True)
+    opt.SEL_ALLOW_WHITE_SPACE = d.get('sel_allow_spaces', False)
+    opt.SEL_CASE_SENSITIVE    = d.get('sel_case_sens', False)
+    opt.SEL_WORDS_ONLY        = d.get('sel_words_only', False)
+    opt.SEL_WHOLE_WORDS       = d.get('sel_whole_words', False)
 
-    opt.CARET_ALLOW           = str_to_bool(app.ini_read(fn_ini, 'op', 'caret_allow', '1'))
-    opt.CARET_CASE_SENSITIVE  = str_to_bool(app.ini_read(fn_ini, 'op', 'caret_case_sensitive', '1'))
-    opt.CARET_WHOLE_WORDS     = str_to_bool(app.ini_read(fn_ini, 'op', 'caret_whole_words', '1'))
+    opt.CARET_ALLOW           = d.get('caret_allow', True)
+    opt.CARET_CASE_SENSITIVE  = d.get('caret_case_sens', True)
+    opt.CARET_WHOLE_WORDS     = d.get('caret_whole_words', True)
 
-    opt.THEMEITEM_CURRENT     = app.ini_read(fn_ini, 'colors', 'theme_item_current', opt.THEMEITEM_CURRENT)
-    opt.THEMEITEM_OTHER       = app.ini_read(fn_ini, 'colors', 'theme_item_other', opt.THEMEITEM_OTHER)
+    opt.THEMEITEM_CURRENT     = d.get('theme_item_current', 'SectionBG2')
+    opt.THEMEITEM_OTHER       = d.get('theme_item_other', 'SectionBG1')
 
     theme = app.app_proc(app.PROC_THEME_SYNTAX_DICT_GET, '')
     item_id = theme['Id']
@@ -51,33 +60,12 @@ def do_load_ops():
         opt.COLOR_BG_CURRENT = item_cur['color_back']
         opt.COLOR_BG_OTHER = item_oth['color_back']
     else:
-        print('Incorrect theme item(s) "%s", "%s" in "%s"'%(opt.THEMEITEM_CURRENT, opt.THEMEITEM_OTHER, fn_ini))
+        print('Incorrect theme item(s) "%s", "%s" in "%s"'%(opt.THEMEITEM_CURRENT, opt.THEMEITEM_OTHER, fn_config))
         opt.COLOR_BG_CURRENT = 0x80e080
         opt.COLOR_BG_OTHER = 0x00e0e0
 
-    opt.LEXERS_ALLOWED = app.ini_read(fn_ini, 'op', 'lexers_allowed', '')
-    opt.LEXERS_DISABLED = app.ini_read(fn_ini, 'op', 'lexers_disabled', '')
-
-def do_save_ops():
-    app.ini_write(fn_ini, 'op', 'min_len', str(opt.MIN_LEN))
-    app.ini_write(fn_ini, 'op', 'max_lines', str(opt.MAX_LINES))
-    app.ini_write(fn_ini, 'op', 'use_nearest_line_count', str(opt.USE_NEAREST_LINE_COUNT))
-
-    app.ini_write(fn_ini, 'op', 'sel_allow', bool_to_str(opt.SEL_ALLOW))
-    app.ini_write(fn_ini, 'op', 'sel_allow_white_space', bool_to_str(opt.SEL_ALLOW_WHITE_SPACE))
-    app.ini_write(fn_ini, 'op', 'sel_case_sensitive', bool_to_str(opt.SEL_CASE_SENSITIVE))
-    app.ini_write(fn_ini, 'op', 'sel_words_only', bool_to_str(opt.SEL_WORDS_ONLY))
-    app.ini_write(fn_ini, 'op', 'sel_whole_words', bool_to_str(opt.SEL_WHOLE_WORDS))
-
-    app.ini_write(fn_ini, 'op', 'caret_allow', bool_to_str(opt.CARET_ALLOW))
-    app.ini_write(fn_ini, 'op', 'caret_case_sensitive', bool_to_str(opt.CARET_CASE_SENSITIVE))
-    app.ini_write(fn_ini, 'op', 'caret_whole_words', bool_to_str(opt.CARET_WHOLE_WORDS))
-
-    app.ini_write(fn_ini, 'colors', 'theme_item_current', opt.THEMEITEM_CURRENT)
-    app.ini_write(fn_ini, 'colors', 'theme_item_other', opt.THEMEITEM_OTHER)
-
-    app.ini_write(fn_ini, 'op', 'lexers_allowed', opt.LEXERS_ALLOWED)
-    app.ini_write(fn_ini, 'op', 'lexers_disabled', opt.LEXERS_DISABLED)
+    opt.LEXERS_ALLOWED = d.get('lexers_allowed', '')
+    opt.LEXERS_DISABLED = d.get('lexers_disabled', '')
 
 
 def is_lexer_ok(s):
@@ -99,16 +87,98 @@ class Command:
 
     def on_save(self, ed_self):
         fn = ed_self.get_filename()
-        if fn==fn_ini:
+        if fn==fn_config:
             do_load_ops()
 
     def config(self):
-        do_save_ops()
-        if os.path.isfile(fn_ini):
-            app.file_open(fn_ini)
-        else:
-            app.msg_status('Config file not found')
 
+        open(fn_meta, 'w').write(json.dumps([
+        {   "opt": "min_len",
+            "cmt": ["Minimal length of fragment to handle"],
+            "def": 2,
+            "frm": "int",
+            "chp": ""
+        },
+        {   "opt": "max_lines",
+            "cmt": ["Maximal number of lines in document, when plugin is still active"],
+            "def": 5000,
+            "frm": "int",
+            "chp": ""
+        },
+        {   "opt": "nearest_count",
+            "cmt": ["Find matches only in ... lines above+below the caret"],
+            "def": 10000,
+            "frm": "int",
+            "chp": ""
+        },
+        {   "opt": "sel_allow",
+            "cmt": ["Plugin handles current selection (on selection changing)"],
+            "def": True,
+            "frm": "bool",
+            "chp": ""
+        },
+        {   "opt": "sel_allow_spaces",
+            "cmt": ["Use also whitespace in selection, otherwise trim it"],
+            "def": False,
+            "frm": "bool",
+            "chp": ""
+        },
+        {   "opt": "sel_case_sens",
+            "cmt": ["Search for selection is case-sensitive"],
+            "def": False,
+            "frm": "bool",
+            "chp": ""
+        },
+        {   "opt": "sel_words_only",
+            "cmt": ["Plugin handles selection only when it is whole word"],
+            "def": False,
+            "frm": "bool",
+            "chp": ""
+        },
+        {   "opt": "sel_whole_words",
+            "cmt": ["Search for selection finds whole words only"],
+            "def": False,
+            "frm": "bool",
+            "chp": ""
+        },
+        {   "opt": "caret_allow",
+            "cmt": ["Plugin handles word under caret (on caret moving)"],
+            "def": True,
+            "frm": "bool",
+            "chp": ""
+        },
+        {   "opt": "caret_case_sens",
+            "cmt": ["Search for word under caret is case-sensitive"],
+            "def": True,
+            "frm": "bool",
+            "chp": ""
+        },
+        {   "opt": "caret_whole_words",
+            "cmt": ["Search for word under caret finds whole words only"],
+            "def": True,
+            "frm": "bool",
+            "chp": ""
+        },
+        {   "opt": "theme_item_current",
+            "cmt": ["Element of syntax-theme, which color is used for word under caret"],
+            "def": "SectionBG2",
+            "frm": "strs",
+            "lst": ALLOWED_ITEMS,
+            "chp": ""
+        },
+        {   "opt": "theme_item_other",
+            "cmt": ["Element of syntax-theme, which color is used for other found matches"],
+            "def": "SectionBG2",
+            "frm": "strs",
+            "lst": ALLOWED_ITEMS,
+            "chp": ""
+        },
+        ]))
+
+        subset = '' # Key for isolated storage on plugin settings
+        title = 'Highlight Occurrences options'
+        how = {'hide_lex_fil': True, 'stor_json': fn_config}
+        op_ed.OptEdD(path_keys_info=fn_meta, subset=subset, how=how).show(title)
 
     def on_caret(self, ed_self):
 
