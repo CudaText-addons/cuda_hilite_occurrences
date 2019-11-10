@@ -4,7 +4,6 @@ import cudatext as app
 import cudax_lib as appx
 import cuda_options_editor as op_ed
 from . import opt
-from cudax_lib import get_opt
 
 NONWORD_DEF = '''-+*=/\()[]{}<>"'.,:;~?!@#$%^&|`…'''
 NONWORD = {}
@@ -20,6 +19,9 @@ def str_to_bool(s): return s=='1'
 def log(s):
     pass
     #print(s)
+
+def get_opt(path, val):
+    return appx.get_opt(path, val, user_json=fn_config)
 
 def get_line(ed, n):
     # limit max length of line
