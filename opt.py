@@ -95,14 +95,14 @@ META_OPT = [
         },
         {   "opt": "theme_item_current",
             "cmt": ["Element of syntax-theme, which color is used for word under caret"],
-            "def": "SectionBG2",
+            "def": "BracketBG",
             "frm": "strs",
             "lst": ALLOWED_ITEMS,
             "chp": ""
         },
         {   "opt": "theme_item_other",
             "cmt": ["Element of syntax-theme, which color is used for other found matches"],
-            "def": "SectionBG1",
+            "def": "BracketBG",
             "frm": "strs",
             "lst": ALLOWED_ITEMS,
             "chp": ""
