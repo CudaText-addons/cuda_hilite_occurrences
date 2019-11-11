@@ -83,11 +83,6 @@ class Command:
     def __init__(self):
         do_load_ops()
 
-    def on_save(self, ed_self):
-        fn = ed_self.get_filename()
-        if fn==fn_config:
-            do_load_ops()
-
     def config(self):
 
         open(fn_meta, 'w').write(json.dumps([
