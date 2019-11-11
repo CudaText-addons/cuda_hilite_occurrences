@@ -38,12 +38,12 @@ def do_load_ops():
     opt.CARET_CASE_SENSITIVE  = get_opt('caret_case_sens',      meta_def('caret_case_sens'))
     opt.CARET_WHOLE_WORDS     = get_opt('caret_whole_words',    meta_def('caret_whole_words'))
 
-    opt.THEMEITEM_CURRENT     = get_opt('theme_item_current',   meta_def('theme_item_current'))
-    opt.THEMEITEM_OTHER       = get_opt('theme_item_other',     meta_def('theme_item_other'))
+    theme_cur     = get_opt('theme_item_current',   meta_def('theme_item_current'))
+    theme_oth     = get_opt('theme_item_other',     meta_def('theme_item_other'))
 
     theme = app.app_proc(app.PROC_THEME_SYNTAX_DICT_GET, '')
-    item_cur = theme.get(opt.THEMEITEM_CURRENT)
-    item_oth = theme.get(opt.THEMEITEM_OTHER)
+    item_cur = theme.get(theme_cur)
+    item_oth = theme.get(theme_oth)
 
     opt.COLOR_FONT_CURRENT = app.COLOR_NONE
     opt.COLOR_FONT_OTHER = app.COLOR_NONE
