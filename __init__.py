@@ -49,12 +49,11 @@ def do_load_ops():
     opt.THEMEITEM_OTHER       = get_opt('theme_item_other',     meta_def('theme_item_other'))
 
     theme = app.app_proc(app.PROC_THEME_SYNTAX_DICT_GET, '')
-    item_id = theme['Id']
     item_cur = theme.get(opt.THEMEITEM_CURRENT)
     item_oth = theme.get(opt.THEMEITEM_OTHER)
 
-    opt.COLOR_FONT_CURRENT = item_id['color_font']
-    opt.COLOR_FONT_OTHER = opt.COLOR_FONT_CURRENT
+    opt.COLOR_FONT_CURRENT = app.COLOR_NONE
+    opt.COLOR_FONT_OTHER = app.COLOR_NONE
 
     if item_cur and item_oth:
         opt.COLOR_BG_CURRENT = item_cur['color_back']
