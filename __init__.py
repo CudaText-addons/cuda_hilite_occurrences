@@ -9,13 +9,6 @@ NONWORD_DEF = '''-+*=/\()[]{}<>"'.,:;~?!@#$%^&|`…'''
 NONWORD = {}
 MARKTAG = 101 #uniq value for all markers plugins
 fn_config = 'cuda_hilite_occurrences.json'
-#fn_config = os.path.join(app.app_path(app.APP_DIR_SETTINGS), 'cuda_hilite_occurrences.json')
-#fn_meta = os.path.join(app.app_path(app.APP_DIR_SETTINGS), 'cuda_hilite_occurrences_meta.json')
-
-#ALLOWED_ITEMS = ['IncludeBG1', 'IncludeBG2', 'IncludeBG3', 'IncludeBG4', 'SectionBG1', 'SectionBG2', 'SectionBG3', 'SectionBG4', 'LightBG1', 'LightBG2', 'LightBG3', 'LightBG4', 'LightBG5', ]
-
-def bool_to_str(v): return '1' if v else '0'
-def str_to_bool(s): return s=='1'
 
 def log(s):
     pass
