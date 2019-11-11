@@ -8,10 +8,11 @@ from . import opt
 NONWORD_DEF = '''-+*=/\()[]{}<>"'.,:;~?!@#$%^&|`…'''
 NONWORD = {}
 MARKTAG = 101 #uniq value for all markers plugins
-fn_config = os.path.join(app.app_path(app.APP_DIR_SETTINGS), 'cuda_hilite_occurrences.json')
-fn_meta = os.path.join(app.app_path(app.APP_DIR_SETTINGS), 'cuda_hilite_occurrences_meta.json')
+fn_config = 'cuda_hilite_occurrences.json'
+#fn_config = os.path.join(app.app_path(app.APP_DIR_SETTINGS), 'cuda_hilite_occurrences.json')
+#fn_meta = os.path.join(app.app_path(app.APP_DIR_SETTINGS), 'cuda_hilite_occurrences_meta.json')
 
-ALLOWED_ITEMS = ['IncludeBG1', 'IncludeBG2', 'IncludeBG3', 'IncludeBG4', 'SectionBG1', 'SectionBG2', 'SectionBG3', 'SectionBG4', 'LightBG1', 'LightBG2', 'LightBG3', 'LightBG4', 'LightBG5', ]
+#ALLOWED_ITEMS = ['IncludeBG1', 'IncludeBG2', 'IncludeBG3', 'IncludeBG4', 'SectionBG1', 'SectionBG2', 'SectionBG3', 'SectionBG4', 'LightBG1', 'LightBG2', 'LightBG3', 'LightBG4', 'LightBG5', ]
 
 def bool_to_str(v): return '1' if v else '0'
 def str_to_bool(s): return s=='1'
@@ -28,23 +29,24 @@ def get_line(ed, n):
     return ed.get_text_line(n, 500)
 
 def do_load_ops():
+    meta_def    = lambda op: [it['def'] for it in opt.META_OPT if it['opt']==op][0]
     
-    opt.MIN_LEN               = get_opt('min_len', 2)
-    opt.MAX_LINES             = get_opt('max_lines', 5000)
-    opt.USE_NEAREST_LINE_COUNT = get_opt('nearest_count', 10000)
+    opt.MIN_LEN               = get_opt('min_len',              meta_def('min_len'))
+    opt.MAX_LINES             = get_opt('max_lines',            meta_def('max_lines'))
+    opt.USE_NEAREST_LINE_COUNT = get_opt('nearest_count',       meta_def('nearest_count'))
 
-    opt.SEL_ALLOW             = get_opt('sel_allow', True)
-    opt.SEL_ALLOW_WHITE_SPACE = get_opt('sel_allow_spaces', False)
-    opt.SEL_CASE_SENSITIVE    = get_opt('sel_case_sens', False)
-    opt.SEL_WORDS_ONLY        = get_opt('sel_words_only', False)
-    opt.SEL_WHOLE_WORDS       = get_opt('sel_whole_words', False)
+    opt.SEL_ALLOW             = get_opt('sel_allow',            meta_def('sel_allow'))
+    opt.SEL_ALLOW_WHITE_SPACE = get_opt('sel_allow_spaces',     meta_def('sel_allow_spaces'))
+    opt.SEL_CASE_SENSITIVE    = get_opt('sel_case_sens',        meta_def('sel_case_sens'))
+    opt.SEL_WORDS_ONLY        = get_opt('sel_words_only',       meta_def('sel_words_only'))
+    opt.SEL_WHOLE_WORDS       = get_opt('sel_whole_words',      meta_def('sel_whole_words'))
 
-    opt.CARET_ALLOW           = get_opt('caret_allow', True)
-    opt.CARET_CASE_SENSITIVE  = get_opt('caret_case_sens', True)
-    opt.CARET_WHOLE_WORDS     = get_opt('caret_whole_words', True)
+    opt.CARET_ALLOW           = get_opt('caret_allow',          meta_def('caret_allow'))
+    opt.CARET_CASE_SENSITIVE  = get_opt('caret_case_sens',      meta_def('caret_case_sens'))
+    opt.CARET_WHOLE_WORDS     = get_opt('caret_whole_words',    meta_def('caret_whole_words'))
 
-    opt.THEMEITEM_CURRENT     = get_opt('theme_item_current', 'SectionBG2')
-    opt.THEMEITEM_OTHER       = get_opt('theme_item_other', 'SectionBG1')
+    opt.THEMEITEM_CURRENT     = get_opt('theme_item_current',   meta_def('theme_item_current'))
+    opt.THEMEITEM_OTHER       = get_opt('theme_item_other',     meta_def('theme_item_other'))
 
     theme = app.app_proc(app.PROC_THEME_SYNTAX_DICT_GET, '')
     item_id = theme['Id']
@@ -90,106 +92,18 @@ class Command:
 
     def config(self):
 
-        open(fn_meta, 'w').write(json.dumps([
-        {   "opt": "min_len",
-            "cmt": ["Minimal length of fragment to handle"],
-            "def": 2,
-            "frm": "int",
-            "chp": ""
-        },
-        {   "opt": "max_lines",
-            "cmt": ["Maximal number of lines in document, when plugin is still active"],
-            "def": 5000,
-            "frm": "int",
-            "chp": ""
-        },
-        {   "opt": "nearest_count",
-            "cmt": ["Find matches only in ... lines above+below the caret"],
-            "def": 10000,
-            "frm": "int",
-            "chp": ""
-        },
-        {   "opt": "sel_allow",
-            "cmt": ["Plugin handles current selection (on selection changing)"],
-            "def": True,
-            "frm": "bool",
-            "chp": ""
-        },
-        {   "opt": "sel_allow_spaces",
-            "cmt": ["Use also whitespace in selection, otherwise trim it"],
-            "def": False,
-            "frm": "bool",
-            "chp": ""
-        },
-        {   "opt": "sel_case_sens",
-            "cmt": ["Search for selection is case-sensitive"],
-            "def": False,
-            "frm": "bool",
-            "chp": ""
-        },
-        {   "opt": "sel_words_only",
-            "cmt": ["Plugin handles selection only when it is whole word"],
-            "def": False,
-            "frm": "bool",
-            "chp": ""
-        },
-        {   "opt": "sel_whole_words",
-            "cmt": ["Search for selection finds whole words only"],
-            "def": False,
-            "frm": "bool",
-            "chp": ""
-        },
-        {   "opt": "caret_allow",
-            "cmt": ["Plugin handles word under caret (on caret moving)"],
-            "def": True,
-            "frm": "bool",
-            "chp": ""
-        },
-        {   "opt": "caret_case_sens",
-            "cmt": ["Search for word under caret is case-sensitive"],
-            "def": True,
-            "frm": "bool",
-            "chp": ""
-        },
-        {   "opt": "caret_whole_words",
-            "cmt": ["Search for word under caret finds whole words only"],
-            "def": True,
-            "frm": "bool",
-            "chp": ""
-        },
-        {   "opt": "theme_item_current",
-            "cmt": ["Element of syntax-theme, which color is used for word under caret"],
-            "def": "SectionBG2",
-            "frm": "strs",
-            "lst": ALLOWED_ITEMS,
-            "chp": ""
-        },
-        {   "opt": "theme_item_other",
-            "cmt": ["Element of syntax-theme, which color is used for other found matches"],
-            "def": "SectionBG1",
-            "frm": "strs",
-            "lst": ALLOWED_ITEMS,
-            "chp": ""
-        },
-        {   "opt": "lexers_allowed",
-            "cmt": ["Comma-separated list of allowed lexers"],
-            "def": "",
-            "frm": "str",
-            "chp": ""
-        },
-        {   "opt": "lexers_disabled",
-            "cmt": ["Comma-separated list of disabled lexers"],
-            "def": "",
-            "frm": "str",
-            "chp": ""
-        },
-        ]))
+#       open(fn_meta, 'w').write(json.dumps(opt.META_OPT))
 
         subset = '' # Key for isolated storage on plugin settings
         title = 'Highlight Occurrences options'
         how = {'hide_lex_fil': True, 'stor_json': fn_config}
-        if op_ed.OptEdD(path_keys_info=fn_meta, subset=subset, how=how).show(title):
-            do_load_ops()
+#       if op_ed.OptEdD(path_keys_info=fn_meta, subset=subset, how=how).show(title):
+        op_ed.OptEdD(
+            path_keys_info=opt.META_OPT, 
+            subset=subset, 
+            how=how
+        ).show(title)
+        do_load_ops()
 
     def on_caret(self, ed_self):
 
