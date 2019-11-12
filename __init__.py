@@ -152,7 +152,9 @@ class Command:
         yy = [i[1] for i in items]
         nn = [nlen for i in items]
         ed_self.attr(app.MARKERS_ADD_MANY, MARKTAG, xx, yy, nn, 
-                    opt.COLOR_FONT_OTHER, opt.COLOR_BG_OTHER,
+                    color_font=opt.COLOR_FONT_OTHER, 
+                    color_bg=opt.COLOR_BG_OTHER,
+                    color_border=opt.COLOR_BRD_OTHER,
                     border_left=opt.BRD_OTHER,
                     border_right=opt.BRD_OTHER,
                     border_up=opt.BRD_OTHER,
@@ -161,7 +163,9 @@ class Command:
 
         if opt.CARET_ALLOW and not is_selection:
             ed_self.attr(app.MARKERS_ADD, MARKTAG, x0, y0, nlen, 
-                        opt.COLOR_FONT_CURRENT, opt.COLOR_BG_CURRENT,
+                        color_font=opt.COLOR_FONT_CURRENT, 
+                        color_bg=opt.COLOR_BG_CURRENT,
+                        color_border=opt.COLOR_BRD_CURRENT,
                         border_left=opt.BRD_CURRENT,
                         border_right=opt.BRD_CURRENT,
                         border_up=opt.BRD_CURRENT,
