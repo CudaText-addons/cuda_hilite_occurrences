@@ -50,11 +50,19 @@ def do_load_ops():
 
     if item_cur and item_oth:
         opt.COLOR_BG_CURRENT = item_cur['color_back']
+        opt.COLOR_BRD_CURRENT = item_cur['color_border']
+        opt.BRD_CURRENT = item_cur['border_bottom']
         opt.COLOR_BG_OTHER = item_oth['color_back']
+        opt.COLOR_BRD_OTHER = item_oth['color_border']
+        opt.BRD_OTHER = item_oth['border_bottom']
     else:
         print('Incorrect theme item(s) "%s", "%s" in "%s"'%(opt.THEMEITEM_CURRENT, opt.THEMEITEM_OTHER, fn_config))
         opt.COLOR_BG_CURRENT = 0x80e080
         opt.COLOR_BG_OTHER = 0x00e0e0
+        opt.COLOR_BRD_CURRENT = 0
+        opt.COLOR_BRD_OTHER = 0
+        opt.BRD_CURRENT = 0
+        opt.BRD_OTHER = 0
 
     opt.LEXERS_ALLOWED = get_opt('lexers_allowed', '')
     opt.LEXERS_DISABLED = get_opt('lexers_disabled', '')
@@ -143,10 +151,22 @@ class Command:
         xx = [i[0] for i in items]
         yy = [i[1] for i in items]
         nn = [nlen for i in items]
-        ed_self.attr(app.MARKERS_ADD_MANY, MARKTAG, xx, yy, nn, opt.COLOR_FONT_OTHER, opt.COLOR_BG_OTHER)
+        ed_self.attr(app.MARKERS_ADD_MANY, MARKTAG, xx, yy, nn, 
+                    opt.COLOR_FONT_OTHER, opt.COLOR_BG_OTHER,
+                    border_left=opt.BRD_OTHER,
+                    border_right=opt.BRD_OTHER,
+                    border_up=opt.BRD_OTHER,
+                    border_down=opt.BRD_OTHER,
+                    )
 
         if opt.CARET_ALLOW and not is_selection:
-            ed_self.attr(app.MARKERS_ADD, MARKTAG, x0, y0, nlen, opt.COLOR_FONT_CURRENT, opt.COLOR_BG_CURRENT)
+            ed_self.attr(app.MARKERS_ADD, MARKTAG, x0, y0, nlen, 
+                        opt.COLOR_FONT_CURRENT, opt.COLOR_BG_CURRENT,
+                        border_left=opt.BRD_CURRENT,
+                        border_right=opt.BRD_CURRENT,
+                        border_up=opt.BRD_CURRENT,
+                        border_down=opt.BRD_CURRENT,
+                        )
 
         app.msg_status('Matches hilited: {}'.format(ncount))
 
