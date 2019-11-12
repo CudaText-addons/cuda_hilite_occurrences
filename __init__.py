@@ -137,15 +137,18 @@ class Command:
             app.msg_status('')
             return
 
-        for item in items:
-            if item == (x0, y0): continue
+        ncount = len(items)
+        nlen = len(text)
+        items = [i for i in items if i!=(x0, y0)]
+        xx = [i[0] for i in items]
+        yy = [i[1] for i in items]
+        nn = [nlen for i in items]
+        ed_self.attr(app.MARKERS_ADD_MANY, MARKTAG, xx, yy, nn, opt.COLOR_FONT_OTHER, opt.COLOR_BG_OTHER)
 
-            ed_self.attr(app.MARKERS_ADD, MARKTAG, item[0], item[1], len(text), opt.COLOR_FONT_OTHER, opt.COLOR_BG_OTHER)
-        else:
-            if opt.CARET_ALLOW and not is_selection:
-                ed_self.attr(app.MARKERS_ADD, MARKTAG, x0, y0, len(text), opt.COLOR_FONT_CURRENT, opt.COLOR_BG_CURRENT)
+        if opt.CARET_ALLOW and not is_selection:
+            ed_self.attr(app.MARKERS_ADD, MARKTAG, x0, y0, nlen, opt.COLOR_FONT_CURRENT, opt.COLOR_BG_CURRENT)
 
-        app.msg_status('Matches hilited: {}'.format(len(items)))
+        app.msg_status('Matches hilited: {}'.format(ncount))
 
 
 def is_word(s, lexer):

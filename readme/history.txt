@@ -1,4 +1,7 @@
 
+2019.11.12
++ add: optimization
+
 2019.11.10
 + add: use Options Editor to show nice config dialog
 * change: now used JSON config file name (was INI config)
