@@ -37,7 +37,9 @@ META_OPT = [
             "chp": ""
         },
         {   "opt": "nearest_count",
-            "cmt": ["Find matches only in ... lines above+below the caret"],
+            "cmt": ["If value=0: only visible part of text is handled.",
+                    "If value>0: specified count of lines, around caret, is handled.",
+                    "To find matches in entire huge file (not recommended), set option to e.g. 200000."],
             "def": 10000,
             "frm": "int",
             "chp": ""
@@ -105,13 +107,15 @@ META_OPT = [
             "chp": ""
         },
         {   "opt": "lexers_allowed",
-            "cmt": ["Comma-separated list of allowed lexers"],
+            "cmt": ["If not empty, then plugin is active only for mentioned lexers. Comma-separated list.", 
+                    "None-lexer must be written as '-'."],
             "def": "",
             "frm": "str",
             "chp": ""
         },
         {   "opt": "lexers_disabled",
-            "cmt": ["Comma-separated list of disabled lexers"],
+            "cmt": ["If not empty, then plugin is disabled for mentioned lexers. Comma-separated list.",
+                    "Has higher priority than option 'lexers_allowed'."],
             "def": "",
             "frm": "str",
             "chp": ""
