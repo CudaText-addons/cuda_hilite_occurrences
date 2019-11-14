@@ -1,4 +1,7 @@
 
+2019.11.14
++ add: react to editor theme changing
+
 2019.11.12
 + add: style BracketBG renders with borders, if border is set in theme
 + add: optimization

@@ -23,7 +23,7 @@ def get_line(ed, n):
 
 def do_load_ops():
     meta_def    = lambda op: [it['def'] for it in opt.META_OPT if it['opt']==op][0]
-    
+
     opt.MIN_LEN               = get_opt('min_len',              meta_def('min_len'))
     opt.MAX_LINES             = get_opt('max_lines',            meta_def('max_lines'))
     opt.USE_NEAREST_LINE_COUNT = get_opt('nearest_count',       meta_def('nearest_count'))
@@ -38,12 +38,18 @@ def do_load_ops():
     opt.CARET_CASE_SENSITIVE  = get_opt('caret_case_sens',      meta_def('caret_case_sens'))
     opt.CARET_WHOLE_WORDS     = get_opt('caret_whole_words',    meta_def('caret_whole_words'))
 
-    theme_cur     = get_opt('theme_item_current',   meta_def('theme_item_current'))
-    theme_oth     = get_opt('theme_item_other',     meta_def('theme_item_other'))
+    opt.LEXERS_ALLOWED = get_opt('lexers_allowed', '')
+    opt.LEXERS_DISABLED = get_opt('lexers_disabled', '')
+
+    opt.theme_cur     = get_opt('theme_item_current',   meta_def('theme_item_current'))
+    opt.theme_oth     = get_opt('theme_item_other',     meta_def('theme_item_other'))
+    do_update_colors()
+
+def do_update_colors():
 
     theme = app.app_proc(app.PROC_THEME_SYNTAX_DICT_GET, '')
-    item_cur = theme.get(theme_cur)
-    item_oth = theme.get(theme_oth)
+    item_cur = theme.get(opt.theme_cur)
+    item_oth = theme.get(opt.theme_oth)
 
     opt.COLOR_FONT_CURRENT = app.COLOR_NONE
     opt.COLOR_FONT_OTHER = app.COLOR_NONE
@@ -63,9 +69,6 @@ def do_load_ops():
         opt.COLOR_BRD_OTHER = 0
         opt.BRD_CURRENT = 0
         opt.BRD_OTHER = 0
-
-    opt.LEXERS_ALLOWED = get_opt('lexers_allowed', '')
-    opt.LEXERS_DISABLED = get_opt('lexers_disabled', '')
 
 
 def is_lexer_ok(s):
@@ -94,11 +97,17 @@ class Command:
         how = {'hide_lex_fil': True, 'stor_json': fn_config}
 #       if op_ed.OptEdD(path_keys_info=fn_meta, subset=subset, how=how).show(title):
         op_ed.OptEdD(
-            path_keys_info=opt.META_OPT, 
-            subset=subset, 
+            path_keys_info=opt.META_OPT,
+            subset=subset,
             how=how
         ).show(title)
         do_load_ops()
+
+    def on_state(self, ed_self, state):
+
+        if state==app.APPSTATE_THEME_SYNTAX:
+            do_update_colors()
+            self.on_caret(ed_self)
 
     def on_caret(self, ed_self):
 
@@ -151,8 +160,8 @@ class Command:
         xx = [i[0] for i in items]
         yy = [i[1] for i in items]
         nn = [nlen for i in items]
-        ed_self.attr(app.MARKERS_ADD_MANY, MARKTAG, xx, yy, nn, 
-                    color_font=opt.COLOR_FONT_OTHER, 
+        ed_self.attr(app.MARKERS_ADD_MANY, MARKTAG, xx, yy, nn,
+                    color_font=opt.COLOR_FONT_OTHER,
                     color_bg=opt.COLOR_BG_OTHER,
                     color_border=opt.COLOR_BRD_OTHER,
                     border_left=opt.BRD_OTHER,
@@ -162,8 +171,8 @@ class Command:
                     )
 
         if opt.CARET_ALLOW and not is_selection:
-            ed_self.attr(app.MARKERS_ADD, MARKTAG, x0, y0, nlen, 
-                        color_font=opt.COLOR_FONT_CURRENT, 
+            ed_self.attr(app.MARKERS_ADD, MARKTAG, x0, y0, nlen,
+                        color_font=opt.COLOR_FONT_CURRENT,
                         color_bg=opt.COLOR_BG_CURRENT,
                         color_border=opt.COLOR_BRD_CURRENT,
                         border_left=opt.BRD_CURRENT,
@@ -301,3 +310,4 @@ def _get_current_text(ed):
             current_text, caret_pos = temp
 
     return current_text, caret_pos, is_selection
+
