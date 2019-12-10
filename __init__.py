@@ -3,6 +3,7 @@ import json
 import cudatext as app
 import cudax_lib as appx
 import cuda_options_editor as op_ed
+from cudatext import ed
 from . import opt
 
 NONWORD_DEF = '''-+*=/\()[]{}<>"'.,:;~?!@#$%^&|`…'''
@@ -110,49 +111,12 @@ class Command:
             self.on_caret(ed_self)
 
     def on_caret(self, ed_self):
+        result_occurrences = _process_occurrences(ed_self)
 
-        lex = ed_self.get_prop(app.PROP_LEXER_FILE)
-        if not lex:
-            lex = '-'
-        if not is_lexer_ok(lex):
+        if not result_occurrences:
             return
 
-        ed_self.attr(app.MARKERS_DELETE_BY_TAG, MARKTAG)
-
-        if ed_self.get_line_count()>opt.MAX_LINES:
-            return
-
-        current_text = _get_current_text(ed_self)
-        if not current_text: return
-
-        text, caret_pos, is_selection = current_text
-
-        if caret_pos[1] != caret_pos[3]: return # no multiline
-        if not opt.SEL_ALLOW_WHITE_SPACE: text = text.strip()
-        if not text: return
-
-        if is_selection:
-            case_sensitive = opt.SEL_CASE_SENSITIVE
-            words_only     = opt.SEL_WORDS_ONLY
-            whole_words    = opt.SEL_WHOLE_WORDS if opt.SEL_WORDS_ONLY else False
-        else:
-            case_sensitive = opt.CARET_CASE_SENSITIVE
-            words_only     = True
-            whole_words    = opt.CARET_WHOLE_WORDS
-
-        if len(text) < opt.MIN_LEN: return
-
-        carets = ed_self.get_carets()
-        if len(carets) != 1: return
-
-        x0, y0, x1, y1 = caret_pos
-        if x0 > x1: x0, x1 = x1, x0
-
-        items = find_all_occurrences(ed_self, text, case_sensitive, whole_words, words_only)
-
-        if not items or (len(items) == 1 and items[0] == (x0, y1)):
-            app.msg_status('')
-            return
+        items, text, is_selection, x0, y0 = result_occurrences
 
         ncount = len(items)
         nlen = len(text)
@@ -182,6 +146,21 @@ class Command:
                         )
 
         app.msg_status('Matches hilited: {}'.format(ncount))
+
+    def select_all(self):
+        result_occurrences = _process_occurrences(ed)
+        if not result_occurrences:
+            return
+
+        items, text, is_selection, x0, y0 = result_occurrences
+
+        ncount = len(items)
+        nlen = len(text)
+
+        for item in items:
+            ed.set_caret(item[0] + len(text), item[1], item[0], item[1], 1)
+
+        app.msg_status('Matches selected: {}'.format(ncount))
 
 
 def is_word(s, lexer):
@@ -311,3 +290,49 @@ def _get_current_text(ed):
 
     return current_text, caret_pos, is_selection
 
+
+def _process_occurrences(ed):
+    lex = ed.get_prop(app.PROP_LEXER_FILE)
+    if not lex:
+        lex = '-'
+    if not is_lexer_ok(lex):
+        return
+
+    ed.attr(app.MARKERS_DELETE_BY_TAG, MARKTAG)
+
+    if ed.get_line_count()>opt.MAX_LINES:
+        return
+
+    current_text = _get_current_text(ed)
+    if not current_text: return
+
+    text, caret_pos, is_selection = current_text
+
+    if caret_pos[1] != caret_pos[3]: return # no multiline
+    if not opt.SEL_ALLOW_WHITE_SPACE: text = text.strip()
+    if not text: return
+
+    if is_selection:
+        case_sensitive = opt.SEL_CASE_SENSITIVE
+        words_only     = opt.SEL_WORDS_ONLY
+        whole_words    = opt.SEL_WHOLE_WORDS if opt.SEL_WORDS_ONLY else False
+    else:
+        case_sensitive = opt.CARET_CASE_SENSITIVE
+        words_only     = True
+        whole_words    = opt.CARET_WHOLE_WORDS
+
+    if len(text) < opt.MIN_LEN: return
+
+    carets = ed.get_carets()
+    if len(carets) != 1: return
+
+    x0, y0, x1, y1 = caret_pos
+    if x0 > x1: x0, x1 = x1, x0
+
+    items = find_all_occurrences(ed, text, case_sensitive, whole_words, words_only)
+
+    if not items or (len(items) == 1 and items[0] == (x0, y1)):
+        app.msg_status('')
+        return
+
+    return items, text, is_selection, x0, y0

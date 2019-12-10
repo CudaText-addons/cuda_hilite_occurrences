@@ -15,3 +15,8 @@ section=commands
 caption=Highlight Occurrences\Config...
 method=config
 menu=o
+
+[item3]
+section=commands
+caption=Highlight Occurrences\Select All
+method=select_all

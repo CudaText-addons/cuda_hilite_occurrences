@@ -1,4 +1,7 @@
 
+2019.12.09
++ add: command "Select all" to select all highlighted matches
+
 2019.11.14
 + add: react to editor theme changing
 
