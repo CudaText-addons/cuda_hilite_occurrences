@@ -158,7 +158,7 @@ class Command:
         nlen = len(text)
 
         for item in items:
-            ed.set_caret(item[0] + len(text), item[1], item[0], item[1], app.CARET_ADD)
+            ed.set_caret(item[0] + nlen, item[1], item[0], item[1], app.CARET_ADD)
 
         app.msg_status('Matches selected: {}'.format(ncount))
 
