@@ -111,12 +111,11 @@ class Command:
             self.on_caret(ed_self)
 
     def on_caret(self, ed_self):
-        result_occurrences = _process_occurrences(ed_self)
-
-        if not result_occurrences:
+        res = _process_occurrences(ed_self)
+        if not res:
             return
 
-        items, text, is_selection, x0, y0 = result_occurrences
+        items, text, is_selection, x0, y0 = res
 
         ncount = len(items)
         nlen = len(text)
@@ -147,18 +146,19 @@ class Command:
 
         app.msg_status('Matches hilited: {}'.format(ncount))
 
+
     def select_all(self):
-        result_occurrences = _process_occurrences(ed)
-        if not result_occurrences:
+        res = _process_occurrences(ed)
+        if not res:
             return
 
-        items, text, is_selection, x0, y0 = result_occurrences
+        items, text, is_selection, x0, y0 = res
 
         ncount = len(items)
         nlen = len(text)
 
         for item in items:
-            ed.set_caret(item[0] + len(text), item[1], item[0], item[1], 1)
+            ed.set_caret(item[0] + len(text), item[1], item[0], item[1], app.CARET_ADD)
 
         app.msg_status('Matches selected: {}'.format(ncount))
 
