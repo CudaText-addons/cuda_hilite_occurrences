@@ -197,8 +197,18 @@ def get_word_under_caret(ed):
     '''
 
     lex = ed.get_prop(app.PROP_LEXER_CARET)
-    x1, y1, x2 = ed.get_carets()[0][:3]
-    y2 = y1
+
+    carets = ed.get_carets()
+    # don't allow multi carets
+    if len(carets) != 1:
+        return
+    x1, y1, x2, y2 = carets[0]
+    if y2 < 0:
+        x2 = x1
+        y2 = y1
+    # don't allow multi-line sel
+    if y1 != y2:
+        return
 
     l_char = r_char = ''
     current_line = get_line(ed, y1)
