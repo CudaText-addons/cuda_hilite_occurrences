@@ -181,45 +181,12 @@ def find_all_occurrences(ed, text, case_sensitive, whole_words, words_only):
     '''
     lex = ed.get_prop(app.PROP_LEXER_FILE)
     if words_only and not is_word(text, lex):
-        log('Hilite Occur: refured to search not whole word: '+text)
+        log('Hilite Occur: refused to search not whole word: '+text)
         return
 
-    if not case_sensitive: text = text.lower()
-
-    # don't handle entire file, handle only range
-    line_min = max(0, ed.get_prop(app.PROP_LINE_TOP) - opt.USE_NEAREST_LINE_COUNT)
-    line_max = min(ed.get_line_count()-1, ed.get_prop(app.PROP_LINE_BOTTOM) + opt.USE_NEAREST_LINE_COUNT)
-
-    res = []
-    for y in range(line_min, line_max+1):
-        line = get_line(ed, y)
-        if not line: continue
-        #if len(line) > opt.MAX_LINE_LEN: continue
-
-        if not case_sensitive: line = line.lower()
-
-        x = 0
-        text_len = len(text)
-        while True:
-            x = line.find(text, x)
-            if x < 0: break
-
-            if whole_words:
-                if x > 0 and is_word(line[x - 1], lex):
-                    log('Skipped match, not whole word: "%s", pos %d, char "%s"' % (line, x, line[x - 1]))
-                    x += text_len + 1
-                    continue
-
-                next_char = x + text_len
-                if next_char < len(line) and is_word(line[next_char], lex):
-                    log('Skipped match, not whole word: "%s", pos %d, char "%s"' % (line, x, line[next_char]))
-                    x += 2
-                    continue
-
-            res.append((x, y))
-
-            x += text_len
-
+    opt = ('c' if case_sensitive else '') + ('w' if whole_words else '')
+    res = ed.action(app.EDACTION_FIND_ALL, text, opt)
+    res = [r[:2] for r in res]
     return res
 
 

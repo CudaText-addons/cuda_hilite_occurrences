@@ -1,4 +1,7 @@
 
+2019.12.17
++ add: use CudaText 1.92 API to speedup mass search
+
 2019.12.09
 + add: command "Select all" to select all highlighted matches
 
