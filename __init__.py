@@ -108,7 +108,7 @@ class Command:
 
         if state==app.APPSTATE_THEME_SYNTAX:
             do_update_colors()
-            self.on_caret(ed_self)
+            self.on_caret(ed)
 
     def on_caret(self, ed_self):
         res = _process_occurrences(ed_self)
