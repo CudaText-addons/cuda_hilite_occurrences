@@ -185,7 +185,7 @@ def find_all_occurrences(ed, text, case_sensitive, whole_words, words_only):
         return
 
     opt = ('c' if case_sensitive else '') + ('w' if whole_words else '')
-    res = ed.action(app.EDACTION_FIND_ALL, text, opt)
+    res = ed.action(app.EDACTION_FIND_ALL, text, opt, 500)
     res = [r[:2] for r in res]
     return res
 
