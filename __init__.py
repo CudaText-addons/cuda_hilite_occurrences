@@ -144,7 +144,7 @@ class Command:
                         border_down=opt.BRD_CURRENT,
                         )
 
-        app.msg_status('Matches hilited: {}'.format(ncount))
+        app.msg_status('Matches highlighted: {}'.format(ncount))
 
 
     def select_all(self):
@@ -177,11 +177,11 @@ def is_word(s, lexer):
 
 def find_all_occurrences(ed, text, case_sensitive, whole_words, words_only):
     '''
-    Finding matches to hilite
+    Finding matches to highlight
     '''
     lex = ed.get_prop(app.PROP_LEXER_FILE)
     if words_only and not is_word(text, lex):
-        log('Hilite Occur: refused to search not whole word: '+text)
+        log('Highlight Occur: refused to search not whole word: '+text)
         return
 
     opt = ('c' if case_sensitive else '') + ('w' if whole_words else '')
