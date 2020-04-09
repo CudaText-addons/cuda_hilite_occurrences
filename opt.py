@@ -1,5 +1,6 @@
 MIN_LEN = 2
 MAX_LINES = 5000
+MAX_LINE_LENGTH = 500
 MAX_LINE_LEN = 2000
 USE_NEAREST_LINE_COUNT = 10000
 
@@ -9,9 +10,11 @@ SEL_CASE_SENSITIVE    = False
 SEL_WORDS_ONLY        = False # Hilite character only if it containts in CHARS.
 SEL_WHOLE_WORDS       = False # Whole word only. Used only if bool(SEL_WORDS_ONLY) == True.
 
-CARET_ALLOW          = True # Hilite all occurrences of word under caret.
-CARET_CASE_SENSITIVE = True
-CARET_WHOLE_WORDS    = True # Whole word only.
+SEL_OCCUR_NO_MIN_LEN  = False
+
+CARET_ALLOW           = True # Hilite all occurrences of word under caret.
+CARET_CASE_SENSITIVE  = True
+CARET_WHOLE_WORDS     = True # Whole word only.
 
 LEXERS_ALLOWED = ''
 LEXERS_DISABLED = ''
@@ -21,6 +24,12 @@ COLOR_FONT_OTHER = 0
 COLOR_BG_CURRENT = 0
 COLOR_BG_OTHER = 0
 
+THEME_CURRENT = ''
+THEME_OTHER = ''
+COLOR_BRD_OTHER = 0
+BRD_OTHER = 0
+COLOR_BRD_CURRENT = 0
+BRD_CURRENT = 0
 
 ALLOWED_ITEMS = ['IncludeBG1', 'IncludeBG2', 'IncludeBG3', 'IncludeBG4', 'SectionBG1', 'SectionBG2', 'SectionBG3', 'SectionBG4', 'BracketBG', 'CurBlockBG', 'LightBG1', 'LightBG2', 'LightBG3', 'LightBG4', 'LightBG5']
 META_OPT = [
@@ -33,6 +42,12 @@ META_OPT = [
         {   "opt": "max_lines",
             "cmt": ["Maximal number of lines in document, when plugin is still active"],
             "def": 5000,
+            "frm": "int",
+            "chp": ""
+        },
+        {   "opt": "max_line_length",
+            "cmt": ["Maximal length of lines, which will be handled by plugin (plugin will skip longer lines)"],
+            "def": 500,
             "frm": "int",
             "chp": ""
         },
@@ -74,6 +89,12 @@ META_OPT = [
             "frm": "bool",
             "chp": ""
         },
+        {   "opt": "sel_ignore_min_len",
+            "cmt": ["Mark occurrences of selected text ignores 'min_len' option"],
+            "def": False,
+            "frm": "bool",
+            "chp": ""
+        },
         {   "opt": "caret_allow",
             "cmt": ["Plugin handles word under caret (on caret moving)"],
             "def": True,
@@ -107,7 +128,7 @@ META_OPT = [
             "chp": ""
         },
         {   "opt": "lexers_allowed",
-            "cmt": ["If not empty, then plugin is active only for mentioned lexers. Comma-separated list.", 
+            "cmt": ["If not empty, then plugin is active only for mentioned lexers. Comma-separated list.",
                     "None-lexer must be written as '-'."],
             "def": "",
             "frm": "str",
