@@ -1,18 +1,17 @@
 MIN_LEN = 2
 MAX_LINES = 5000
-MAX_LINE_LENGTH = 500
-MAX_LINE_LEN = 2000
+MAX_LINE_LEN = 500
 USE_NEAREST_LINE_COUNT = 10000
 
-SEL_ALLOW             = True  # Hilite all occurrences of selected text.
-SEL_ALLOW_WHITE_SPACE = False # Hilite spaces there located in begin or end of selection
+SEL_ALLOW             = True  # Highlight all occurrences of selected text.
+SEL_ALLOW_WHITE_SPACE = False # Highlight spaces there located in begin or end of selection
 SEL_CASE_SENSITIVE    = False
-SEL_WORDS_ONLY        = False # Hilite character only if it containts in CHARS.
+SEL_WORDS_ONLY        = False # Highlight character only if it contains in CHARS.
 SEL_WHOLE_WORDS       = False # Whole word only. Used only if bool(SEL_WORDS_ONLY) == True.
 
-SEL_OCCUR_NO_MIN_LEN  = False
+MARK_IGNORE_MIN_LEN   = False
 
-CARET_ALLOW           = True # Hilite all occurrences of word under caret.
+CARET_ALLOW           = True # Highlight all occurrences of word under caret.
 CARET_CASE_SENSITIVE  = True
 CARET_WHOLE_WORDS     = True # Whole word only.
 
@@ -45,7 +44,7 @@ META_OPT = [
             "frm": "int",
             "chp": ""
         },
-        {   "opt": "max_line_length",
+        {   "opt": "max_line_len",
             "cmt": ["Maximal length of lines, which will be handled by plugin (plugin will skip longer lines)"],
             "def": 500,
             "frm": "int",
@@ -89,7 +88,7 @@ META_OPT = [
             "frm": "bool",
             "chp": ""
         },
-        {   "opt": "sel_ignore_min_len",
+        {   "opt": "mark_ignore_min_len",
             "cmt": ["Mark occurrences of selected text ignores 'min_len' option"],
             "def": False,
             "frm": "bool",

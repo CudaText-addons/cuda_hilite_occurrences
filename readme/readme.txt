@@ -11,23 +11,23 @@ Use commands in "Plugins / Highlight Occurrences" menu:
 	- "Move to last occurrence"     : Move the cursor/caret to the last highlighted occurrence.
 	- "Move to previous occurrence" : Move the cursor/caret to the previous highlighted occurrence.
 	- "Move to next occurrence"     : Move the cursor/caret to the next highlighted occurrence.
-	- "Select all occurrences"      : Selects (Marks with carets) to the highlighted occurrences.
+	- "Select all occurrences"      : Selects (Marks with carets) all the highlighted occurrences. See plugin setting "mark_ignore_min_len".
 
 ------------------------------
 
-Plugin have additional options in "Options / Settings-plugins / Highlight Occurrences".
+Plugin have additional settings in "Options / Settings-plugins / Highlight Occurrences".
 
 Options:
     - "min_len"            : (def=2)           : Minimal length of fragment to handle
     - "max_lines"          : (def=5000)        : Maximal number of lines in document (plugin will disable highlight functionality)
-    - "max_line_length"    : (def=500)         : Maximal length of lines, which will be handled by plugin (plugin will skip longer lines)
+    - "max_line_len"       : (def=500)         : Maximal length of lines, which will be handled by plugin (plugin will skip longer lines)
     - "nearest_count"      : (def=10000)       : (Deprecated) If value=0: only visible part of text is handled, If value>0: specified count of lines, around caret
     - "sel_allow"          : (def=True)        : Plugin handles current selection (on selection changing)
     - "sel_allow_spaces"   : (def=False)       : Plugin allows whitespace in selection, otherwise trim it
     - "sel_case_sens"      : (def=False)       : Search for selection is case-sensitive
     - "sel_words_only"     : (def=False)       : Plugin handles selection only when it is whole word
     - "sel_whole_words"    : (def=False)       : Search for selection finds whole words only
-    - "sel_ignore_min_len" : (def=False)       : Mark occurrences of selected text ignores 'min_len' option. Related to "Plugins / Highlight Occurrences / Select all occurrences" option
+    - "mark_ignore_min_len": (def=False)       : Mark occurrences of selected text ignores 'min_len' option. Related to "Plugins / Highlight Occurrences / Select all occurrences" option
     - "caret_allow"        : (def=True)        : Plugin handles word under caret (on caret moving)
     - "caret_case_sens"    : (def=True)        : Search for word under caret is case-sensitive
     - "caret_whole_words"  : (def=True)        : Search for word under caret finds whole words only
@@ -39,5 +39,6 @@ Options:
 Authors:
   Alexey Torgashin (CudaText)
   @myCrack (at Github)
-  @Jairo-Martinez (at Github) 
+  @Jairo-Martinez (at Github)
+
 License: MIT
