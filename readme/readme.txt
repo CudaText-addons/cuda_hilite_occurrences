@@ -38,5 +38,6 @@ Options:
 
 Authors:
   Alexey Torgashin (CudaText)
-  myCrack (at Github)
+  @myCrack (at Github)
+  @Jairo-Martinez (at Github) 
 License: MIT

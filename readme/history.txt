@@ -1,4 +1,4 @@
-2020.04.07
+2020.04.07 (by @Jairo-Martinez)
 + add: four plugin commands to move caret onto first/last/next/previous occurrence
 + add: plugin option to mark occurrences ignoring minimum length set by 'min_len' option, False by default
 + fix: improvements on code
