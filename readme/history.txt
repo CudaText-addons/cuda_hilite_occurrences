@@ -1,7 +1,10 @@
-2020.04.07 (by @Jairo-Martinez)
+2020.04.13 (patch by @Jairo-Martinez)
+* change: "min_len" plugin setting will affect now only to selections
+
+2020.04.07 (patch by @Jairo-Martinez)
 + add: four plugin commands to move caret onto first/last/next/previous occurrence
-+ add: plugin option to mark occurrences ignoring minimum length set by 'min_len' option, False by default
-+ fix: improvements on code
++ add: plugin setting to mark occurrences ignoring minimum length set by 'min_len' option, False by default
++ fix: code improvements
 
 2020.03.02
 + add: in CudaText 1.96.1, plugin will skip too long lines (len>500)
@@ -9,8 +12,8 @@
 2019.12.17
 + add: use CudaText 1.92 API to speedup mass search
 
-2019.12.09
-+ add: command "Select all" to select all highlighted matches
+2019.12.09 (patch by @Jairo-Martinez)
++ add: command "Select all occurrences" to select all highlighted matches
 
 2019.11.14
 + add: react to editor theme changing

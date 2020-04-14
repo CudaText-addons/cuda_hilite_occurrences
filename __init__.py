@@ -1,7 +1,8 @@
+import datetime
+
 import cudatext as app
 import cudax_lib as appx
 import cuda_options_editor as op_ed
-import datetime
 
 from enum import Enum
 
@@ -13,7 +14,7 @@ NONWORD = {}
 MARKTAG = 101  # uniq value for all markers plugins
 fn_config = 'cuda_hilite_occurrences.json'
 
-# Save current ocurrences result, if user execute select_all command, Cud does
+# Save current occurrences result, if user execute select_all command, Cud does
 # not need to recall app.EDACTION_FIND_ALL function
 occurrences = ()
 
@@ -30,8 +31,10 @@ class Moves(Enum):
 
 
 def log(s):
-    # now = datetime.datetime.now()
-    # print(now.strftime("%H:%M:%S ") + s)
+    # Change conditional to True to log messages in a Debug process
+    if False:
+        now = datetime.datetime.now()
+        print(now.strftime("%H:%M:%S ") + s)
     pass
 
 
@@ -41,7 +44,7 @@ def get_opt(path, val):
 
 def get_line(n):
     # limit max length of line
-    return ed.get_text_line(n, opt.MAX_LINE_LENGTH)
+    return ed.get_text_line(n, opt.MAX_LINE_LEN)
 
 
 def do_load_ops():
@@ -49,7 +52,7 @@ def do_load_ops():
 
     opt.MIN_LEN                = get_opt('min_len',             meta_def('min_len'))
     opt.MAX_LINES              = get_opt('max_lines',           meta_def('max_lines'))
-    opt.MAX_LINE_LENGTH        = get_opt('max_line_length',     meta_def('max_line_length'))
+    opt.MAX_LINE_LEN           = get_opt('max_line_len',        meta_def('max_line_len'))
     opt.USE_NEAREST_LINE_COUNT = get_opt('nearest_count',       meta_def('nearest_count'))
 
     opt.SEL_ALLOW              = get_opt('sel_allow',           meta_def('sel_allow'))
@@ -58,7 +61,7 @@ def do_load_ops():
     opt.SEL_WORDS_ONLY         = get_opt('sel_words_only',      meta_def('sel_words_only'))
     opt.SEL_WHOLE_WORDS        = get_opt('sel_whole_words',     meta_def('sel_whole_words'))
 
-    opt.SEL_OCCUR_NO_MIN_LEN   = get_opt('sel_ignore_min_len',  meta_def('sel_ignore_min_len'))
+    opt.MARK_IGNORE_MIN_LEN    = get_opt('mark_ignore_min_len', meta_def('mark_ignore_min_len'))
 
     opt.CARET_ALLOW            = get_opt('caret_allow',         meta_def('caret_allow'))
     opt.CARET_CASE_SENSITIVE   = get_opt('caret_case_sens',     meta_def('caret_case_sens'))
@@ -242,18 +245,14 @@ def is_word(s, lexer):
     return True
 
 
-def find_all_occurrences(text, case_sensitive, whole_words, words_only):
+def find_all_occurrences(text, case_sensitive, whole_words):
     """
     Finding matches to highlight
     """
-    lex = ed.get_prop(app.PROP_LEXER_FILE)
-    if words_only and not is_word(text, lex):
-        log('Highlight Occur: refused to search not whole word: '+text)
-        return
 
     opts = ('c' if case_sensitive else '') + ('w' if whole_words else '')
     log("Calling ed.action: EDACTION_FIND_ALL")
-    res = ed.action(app.EDACTION_FIND_ALL, text, opts, opt.MAX_LINE_LENGTH)
+    res = ed.action(app.EDACTION_FIND_ALL, text, opts, opt.MAX_LINE_LEN)
     res = [r[:2] for r in res]
     return res
 
@@ -349,6 +348,7 @@ def move_caret(mode):
     x0, y0 = caret
 
     item = None
+
     # Getting the new caret
     if mode in [Moves.MOVE_FIRST]:
         item = items[0]
@@ -385,15 +385,15 @@ def move_caret(mode):
 
 
 def process_ocurrences(sel_occurrences=False):
-    ed.attr(app.MARKERS_DELETE_BY_TAG, MARKTAG)
     global occurrences
 
+    ed.attr(app.MARKERS_DELETE_BY_TAG, MARKTAG)
     app.msg_status('')
 
     if sel_occurrences:
         # In this part of the events, occurrences variable must have data.
         # If not, force matches considering no min length selection.
-        if len(occurrences) == 0 and opt.SEL_OCCUR_NO_MIN_LEN:
+        if len(occurrences) == 0 and opt.MARK_IGNORE_MIN_LEN:
             log("No previous occurrences information")
             res = _get_occurrences(sel_occurrences)
 
@@ -407,7 +407,7 @@ def process_ocurrences(sel_occurrences=False):
 
     else:
 
-        # The hilite function on_caret event only works with one caret.
+        # The highlight function on_caret event only works with one caret.
         if len(ed.get_carets()) != 1: return
 
         res = _get_occurrences()
@@ -421,7 +421,14 @@ def process_ocurrences(sel_occurrences=False):
         return occurrences
 
 
-def _get_occurrences(force_no_min_len=False):
+def _get_occurrences(ignore_min_len=False):
+    """
+    Gets a tuple (items, text, is_selection, x1, y1) containing all the
+    occurrences for the selected word or for the word under current caret.
+    param: ignore_min_len works only with selections.
+    """
+    global occurrences
+
     lex = ed.get_prop(app.PROP_LEXER_FILE)
 
     if not lex:
@@ -437,14 +444,14 @@ def _get_occurrences(force_no_min_len=False):
 
     text, caret_pos, is_selection = current_text
 
-    log("Current text: \"" + text + "\"")
-
-    if not force_no_min_len:
-        if not opt.SEL_ALLOW_WHITE_SPACE: text = text.strip()
-        if not text: return
-        if len(text) < opt.MIN_LEN: return
+    log('Looking occurrences for text: "' + text + '"')
 
     if is_selection:
+        if not ignore_min_len:
+            if not opt.SEL_ALLOW_WHITE_SPACE: text = text.strip()
+            if not text: return
+            if len(text) < opt.MIN_LEN: return
+
         case_sensitive = opt.SEL_CASE_SENSITIVE
         words_only     = opt.SEL_WORDS_ONLY
         whole_words    = opt.SEL_WHOLE_WORDS if opt.SEL_WORDS_ONLY else False
@@ -453,12 +460,15 @@ def _get_occurrences(force_no_min_len=False):
         words_only     = True
         whole_words    = opt.CARET_WHOLE_WORDS
 
+    # Validate if current text is a 'valid word' for current lexer
+    if words_only and not is_word(text, lex):
+        log("Current text refused because is not a valid word")
+        return
+
     # caret_pos have the information with sorted values
     x1, y1 = caret_pos[:2]
 
     # Validate if the searching word is the same of the previous occurrences
-    global occurrences
-
     if len(occurrences) > 0:
         prev_items = occurrences[0]
         prev_text = occurrences[1]
@@ -466,7 +476,7 @@ def _get_occurrences(force_no_min_len=False):
             log("Returning previous occurrences")
             return prev_items, text, is_selection, x1, y1
 
-    items = find_all_occurrences(text, case_sensitive, whole_words, words_only)
+    items = find_all_occurrences(text, case_sensitive, whole_words)
 
     if not items or (len(items) == 1 and items[0] == (x1, y1)):
         return
