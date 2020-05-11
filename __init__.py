@@ -1,12 +1,9 @@
 import datetime
-
-import cudatext as app
-import cudax_lib as appx
-import cuda_options_editor as op_ed
-
 from enum import Enum
 
+import cudatext as app
 from cudatext import ed
+import cudax_lib as appx
 from . import opt
 
 NONWORD_DEF = '''-+*=/\()[]{}<>"'.,:;~?!@#$%^&|`…'''
@@ -122,6 +119,8 @@ class Command:
 
     @staticmethod
     def config():
+
+        import cuda_options_editor as op_ed
 
         subset = ''  # Key for isolated storage on plugin settings
         title = 'Highlight Occurrences options'
