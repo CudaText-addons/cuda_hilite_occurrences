@@ -1,5 +1,9 @@
+
+2020.05.11
++ add: faster start due to optimized "imports"
+
 2020.04.13 (patch by @Jairo-Martinez)
-* change: "min_len" plugin setting will affect now only to selections
+* change: "min_len" plugin setting will affect now only selections
 
 2020.04.07 (patch by @Jairo-Martinez)
 + add: four plugin commands to move caret onto first/last/next/previous occurrence
