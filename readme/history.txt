@@ -1,4 +1,7 @@
 
+2020.05.23
+- fix: option "nearest_line_count" was not used since 2019.12, removed now
+
 2020.05.11
 + add: faster start due to optimized "imports"
 
