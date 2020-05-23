@@ -50,7 +50,6 @@ def do_load_ops():
     opt.MIN_LEN                = get_opt('min_len',             meta_def('min_len'))
     opt.MAX_LINES              = get_opt('max_lines',           meta_def('max_lines'))
     opt.MAX_LINE_LEN           = get_opt('max_line_len',        meta_def('max_line_len'))
-    opt.USE_NEAREST_LINE_COUNT = get_opt('nearest_count',       meta_def('nearest_count'))
 
     opt.SEL_ALLOW              = get_opt('sel_allow',           meta_def('sel_allow'))
     opt.SEL_ALLOW_WHITE_SPACE  = get_opt('sel_allow_spaces',    meta_def('sel_allow_spaces'))

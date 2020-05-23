@@ -1,7 +1,6 @@
 MIN_LEN = 2
 MAX_LINES = 5000
 MAX_LINE_LEN = 500
-USE_NEAREST_LINE_COUNT = 10000
 
 SEL_ALLOW             = True  # Highlight all occurrences of selected text.
 SEL_ALLOW_WHITE_SPACE = False # Highlight spaces there located in begin or end of selection
@@ -47,14 +46,6 @@ META_OPT = [
         {   "opt": "max_line_len",
             "cmt": ["Maximal length of lines, which will be handled by plugin (plugin will skip longer lines)"],
             "def": 500,
-            "frm": "int",
-            "chp": ""
-        },
-        {   "opt": "nearest_count",
-            "cmt": ["If value=0: only visible part of text is handled.",
-                    "If value>0: specified count of lines, around caret, is handled.",
-                    "To find matches in entire huge file (not recommended), set option to e.g. 200000."],
-            "def": 10000,
             "frm": "int",
             "chp": ""
         },
