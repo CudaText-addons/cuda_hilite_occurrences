@@ -1,3 +1,4 @@
+import time
 import datetime
 from enum import Enum
 
@@ -19,6 +20,7 @@ occurrences = ()
 # event
 on_event_disabled = False
 
+time_start = 0
 
 class Moves(Enum):
     MOVE_FIRST = 0
@@ -141,6 +143,9 @@ class Command:
         if on_event_disabled:
             return
 
+        global time_start
+        time_start = time.time()
+
         res = process_ocurrences()
         if not res:
             return
@@ -228,7 +233,8 @@ def paint_occurrences(ed_self, occurrences):
                      border_down=opt.BRD_CURRENT,
                      )
 
-    app.msg_status('Matches highlighted: {}/{}'.format(idx, ncount))
+    tick = round((time.time() - time_start) * 1000)
+    app.msg_status('Matches highlighted: {}/{} ({}ms)'.format(idx, ncount, tick))
 
 
 def is_word(s, lexer):
