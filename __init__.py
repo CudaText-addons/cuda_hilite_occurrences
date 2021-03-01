@@ -139,28 +139,23 @@ class Command:
             do_update_colors()
             self.on_caret(ed)
 
+    def work(self, ed_self):
+        global time_start
+        time_start = time.time()
+
+        res = process_ocurrences()
+        if not res:
+            return
+
+        paint_occurrences(ed_self, res)
+
     def on_caret(self, ed_self):
         if on_event_disabled:
             return
-
-        global time_start
-        time_start = time.time()
-
-        res = process_ocurrences()
-        if not res:
-            return
-
-        paint_occurrences(ed_self, res)
+        self.work(ed_self)
 
     def on_change_slow(self, ed_self):
-        global time_start
-        time_start = time.time()
-
-        res = process_ocurrences()
-        if not res:
-            return
-
-        paint_occurrences(ed_self, res)
+        self.work(ed_self)
 
     def select_all(self):
         global on_event_disabled
