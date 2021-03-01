@@ -152,6 +152,16 @@ class Command:
 
         paint_occurrences(ed_self, res)
 
+    def on_change_slow(self, ed_self):
+        global time_start
+        time_start = time.time()
+
+        res = process_ocurrences()
+        if not res:
+            return
+
+        paint_occurrences(ed_self, res)
+
     def select_all(self):
         global on_event_disabled
 

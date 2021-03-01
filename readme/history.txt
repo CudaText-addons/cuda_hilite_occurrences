@@ -1,4 +1,7 @@
 
+2021.03.01
+- fix: must react to on_change too to clear marks after e.g. Replace-all in Cud
+
 2021.01.06
 + add: show elapsed time in the statusbar: "Matches highlighted: 1/30 (3ms)" 
 
