@@ -7,6 +7,10 @@ from cudatext import ed
 import cudax_lib as appx
 from . import opt
 
+from cudax_lib import get_translation
+_ = get_translation(__file__)  # I18N
+
+
 NONWORD_DEF = '''-+*=/\()[]{}<>"'.,:;~?!@#$%^&|`…'''
 NONWORD = {}
 MARKTAG = 101  # uniq value for all markers plugins
@@ -124,7 +128,7 @@ class Command:
         import cuda_options_editor as op_ed
 
         subset = ''  # Key for isolated storage on plugin settings
-        title = 'Highlight Occurrences options'
+        title = _('Highlight Occurrences options')
         how = {'hide_lex_fil': True, 'stor_json': fn_config}
         op_ed.OptEdD(
             path_keys_info=opt.META_OPT,
@@ -175,7 +179,7 @@ class Command:
         for item in items:
             ed.set_caret(item[0] + nlen, item[1], item[0], item[1], app.CARET_ADD)
 
-        app.msg_status('Matches selected: {}'.format(ncount))
+        app.msg_status(_('Matches selected: {}').format(ncount))
         on_event_disabled = False
 
     def move_prev(self):
@@ -239,7 +243,7 @@ def paint_occurrences(ed_self, occurrences):
                      )
 
     tick = round((time.time() - time_start) * 1000)
-    app.msg_status('Matches highlighted: {}/{} ({}ms)'.format(idx, ncount, tick))
+    app.msg_status(_('Matches highlighted: {}/{} ({}ms)').format(idx, ncount, tick))
 
 
 def is_word(s, lexer):
