@@ -1,5 +1,6 @@
 
-2021.03.01
+2021.03.02
++ add: i18n support (patch by Markus F.)
 - fix: must react to on_change too to clear marks after e.g. Replace-all in Cud
 
 2021.01.06
