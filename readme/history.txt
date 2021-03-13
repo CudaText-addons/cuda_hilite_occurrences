@@ -1,4 +1,7 @@
 
+2021.03.13
++ add: use new API
+
 2021.03.02
 + add: i18n support (patch by Markus F.)
 - fix: must react to on_change too to clear marks after e.g. Replace-all in Cud

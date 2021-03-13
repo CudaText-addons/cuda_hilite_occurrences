@@ -13,7 +13,7 @@ _ = get_translation(__file__)  # I18N
 
 NONWORD_DEF = '''-+*=/\()[]{}<>"'.,:;~?!@#$%^&|`…'''
 NONWORD = {}
-MARKTAG = 101  # uniq value for all markers plugins
+MARKTAG = app.app_proc(app.PROC_GET_UNIQUE_TAG, '')
 fn_config = 'cuda_hilite_occurrences.json'
 
 # Save current occurrences result, if user execute select_all command, Cud does

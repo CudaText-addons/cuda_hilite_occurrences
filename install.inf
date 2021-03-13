@@ -4,7 +4,7 @@ desc=Highlights/Marks all occurrences of current/selected word/fragment
 type=cudatext-plugin
 subdir=cuda_hilite_occurrences
 homepage=https://github.com/CudaText-addons/cuda_hilite_occurrences
-api=1.0.318
+api=1.0.357
 
 [item1]
 section=events
