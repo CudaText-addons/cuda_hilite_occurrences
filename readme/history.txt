@@ -1,4 +1,7 @@
 
+2021.06.08
++ add: also use plugin cuda_prefs for Configuration dialog
+
 2021.03.02
 + add: i18n support (patch by Markus F.)
 - fix: must react to on_change too to clear marks after e.g. Replace-all in Cud

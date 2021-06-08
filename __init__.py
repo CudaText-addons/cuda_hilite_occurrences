@@ -125,7 +125,10 @@ class Command:
     @staticmethod
     def config():
 
-        import cuda_options_editor as op_ed
+        try:
+            import cuda_options_editor as op_ed
+        except ImportError:
+            import cuda_prefs as op_ed
 
         subset = ''  # Key for isolated storage on plugin settings
         title = _('Highlight Occurrences options')
