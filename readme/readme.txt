@@ -1,9 +1,8 @@
 Plugin for CudaText.
-Highlights all occurrences of current word (under caret), or selected text,
-with background color. Color is taken from current syntax-theme.
-Highlighted fragments can be marked with multi-selections.
+Highlights (with background color) all occurrences of current word (under caret), or selected text.
+Color is taken from the current syntax-theme.
+Highlighted fragments can also be marked with multi-selections.
 
-To set hotkeys for commands, use F9 functionality in Command palette (Ctrl+Shift+P).
 ------------------------------
 
 Commands in "Plugins / Highlight Occurrences" menu:
@@ -19,6 +18,8 @@ Commands in "Plugins / Highlight Occurrences" menu:
 - "Select all occurrences"
    Selects (marks with carets) all the highlighted occurrences.
    See plugin setting "mark_ignore_min_len".
+
+To set hotkeys for commands, use F9 functionality in the Command Palette (Ctrl+Shift+P).
 
 ------------------------------
 
@@ -43,10 +44,12 @@ Options:
 - "lexers_allowed"     : (def="")          : If not empty, plugin is active only for mentioned lexers. Comma-separated list, None-lexer must be written as '-'
 - "lexers_disabled"    : (def="")          : If not empty, plugin is disabled for mentioned lexers. Comma-separated list, Has higher priority than option 'lexers_allowed'.
 
+-----------------------
+
 Authors:
   Alexey Torgashin (CudaText)
   @myCrack (at GitHub)
-  @Jairo-Martinez (at GitHub)
+  @JairoMartinezA (at GitHub)
   @halfbrained (at GitHub)
 
 License: MIT
