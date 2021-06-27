@@ -8,7 +8,7 @@ api=1.0.357
 
 [item1]
 section=events
-; real event list is in `Command.__init__()`
+; real event list is in `__init__.py/do_load_ops()`
 events=on_caret
 
 [item2]
