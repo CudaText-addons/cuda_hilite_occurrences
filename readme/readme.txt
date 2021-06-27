@@ -34,6 +34,7 @@ Options:
 - "sel_words_only"     : (def=False)       : Plugin handles selection only when it is whole word
 - "sel_whole_words"    : (def=False)       : Search for selection finds whole words only
 - "mark_ignore_min_len": (def=False)       : Mark occurrences of selected text ignores 'min_len' option. Related to "Plugins / Highlight Occurrences / Select all occurrences" option
+- "visible_fallback"   : (def=False)       : When text is over max_lines - fallback to highlighting only in visible text
 - "caret_allow"        : (def=True)        : Plugin handles word under caret (on caret moving)
 - "caret_case_sens"    : (def=True)        : Search for word under caret is case-sensitive
 - "caret_whole_words"  : (def=True)        : Search for word under caret finds whole words only
@@ -46,5 +47,6 @@ Authors:
   Alexey Torgashin (CudaText)
   @myCrack (at GitHub)
   @Jairo-Martinez (at GitHub)
+  @halfbrained (at GitHub)
 
 License: MIT

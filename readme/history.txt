@@ -1,4 +1,7 @@
 
+2021.06.27
++ add: option "visible_fallback", to highlight occurrences only in visible part of large documents
+
 2021.06.08
 + add: also use plugin cuda_prefs for Configuration dialog
 
