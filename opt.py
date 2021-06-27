@@ -9,6 +9,7 @@ SEL_WORDS_ONLY        = False # Highlight character only if it contains in CHARS
 SEL_WHOLE_WORDS       = False # Whole word only. Used only if bool(SEL_WORDS_ONLY) == True.
 
 MARK_IGNORE_MIN_LEN   = False
+VISIBLE_FALLBACK      = False
 
 CARET_ALLOW           = True # Highlight all occurrences of word under caret.
 CARET_CASE_SENSITIVE  = True
@@ -81,6 +82,12 @@ META_OPT = [
         },
         {   "opt": "mark_ignore_min_len",
             "cmt": ["Mark occurrences of selected text ignores 'min_len' option"],
+            "def": False,
+            "frm": "bool",
+            "chp": ""
+        },
+        {   "opt": "visible_fallback",
+            "cmt": ["When text is over max_lines - fallback to highlighting only in visible text"],
             "def": False,
             "frm": "bool",
             "chp": ""

@@ -1,5 +1,6 @@
 import time
 import datetime
+import re
 from enum import Enum
 
 import cudatext as app
@@ -23,6 +24,7 @@ occurrences = ()
 # Control if the select_all command is being executed. Avoid to run the on_caret
 # event
 on_event_disabled = False
+disable_status_msgs = False
 
 time_start = 0
 
@@ -49,6 +51,13 @@ def get_line(n):
     # limit max length of line
     return ed.get_text_line(n, opt.MAX_LINE_LEN)
 
+def get_area_lines(x, y, w, h):
+    lines = []
+    for i in range(h):
+        line = ed.get_text_substr(x,y+i, x+w,y+i)
+        lines.append(line)
+    return lines
+
 
 def do_load_ops():
     meta_def    = lambda op: [it['def'] for it in opt.META_OPT if it['opt']==op][0]
@@ -64,6 +73,7 @@ def do_load_ops():
     opt.SEL_WHOLE_WORDS        = get_opt('sel_whole_words',     meta_def('sel_whole_words'))
 
     opt.MARK_IGNORE_MIN_LEN    = get_opt('mark_ignore_min_len', meta_def('mark_ignore_min_len'))
+    opt.VISIBLE_FALLBACK       = get_opt('visible_fallback',    meta_def('visible_fallback'))
 
     opt.CARET_ALLOW            = get_opt('caret_allow',         meta_def('caret_allow'))
     opt.CARET_CASE_SENSITIVE   = get_opt('caret_case_sens',     meta_def('caret_case_sens'))
@@ -75,6 +85,13 @@ def do_load_ops():
     opt.THEME_CURRENT          = get_opt('theme_item_current',  meta_def('theme_item_current'))
     opt.THEME_OTHER            = get_opt('theme_item_other',    meta_def('theme_item_other'))
     do_update_colors()
+
+    # subscribe to events
+    events = 'on_caret,on_state,on_change_slow'
+    if opt.VISIBLE_FALLBACK:
+        events += ',on_scroll'
+    ev_str = 'cuda_hilite_occurrences;{};;'.format(events)
+    app.app_proc(app.PROC_SET_EVENTS, ev_str)
 
 
 def do_update_colors():
@@ -164,6 +181,18 @@ class Command:
     def on_change_slow(self, ed_self):
         self.work(ed_self)
 
+    def on_scroll(self, ed_self):
+        global occurrences
+        global disable_status_msgs
+
+        occurrences = ()
+
+        try:
+            disable_status_msgs = True
+            self.work(ed_self)
+        finally:
+            disable_status_msgs = False
+
     def select_all(self):
         global on_event_disabled
 
@@ -246,7 +275,8 @@ def paint_occurrences(ed_self, occurrences):
                      )
 
     tick = round((time.time() - time_start) * 1000)
-    app.msg_status(_('Matches highlighted: {}/{} ({}ms)').format(idx, ncount, tick))
+    if not disable_status_msgs:
+        app.msg_status(_('Matches highlighted: {}/{} ({}ms)').format(idx, ncount, tick))
 
 
 def is_word(s, lexer):
@@ -271,6 +301,84 @@ def find_all_occurrences(text, case_sensitive, whole_words):
     res = ed.action(app.EDACTION_FIND_ALL, text, opts, opt.MAX_LINE_LEN)
     res = [r[:2] for r in res]
     return res
+
+def find_visible_occurrences(text, case_sensitive, whole_words):
+    text_len = len(text)
+
+    wrap_type = ed.get_prop(app.PROP_WRAP)
+    scroll_x  = ed.get_prop(app.PROP_SCROLL_HORZ)
+    scroll_y  = ed.get_prop(app.PROP_SCROLL_VERT)
+    w         = ed.get_prop(app.PROP_VISIBLE_COLUMNS)
+    h         = ed.get_prop(app.PROP_VISIBLE_LINES)
+
+    offset_lines = [] # list of tuples: (x_offset, line_str_part)
+    if wrap_type == app.WRAP_OFF:
+        x0,y0 = scroll_x,scroll_y
+        w += text_len -1
+        h += 1 # include last visible
+
+        offset_lines = [(x0, line) for line in get_area_lines(x0,y0, w,h)]
+    else:   # wrap=on
+        _line_top    = ed.get_prop(app.PROP_LINE_TOP)
+        _line_bottom = ed.get_prop(app.PROP_LINE_BOTTOM)
+        y0 = _line_top # y offset
+
+        if _line_bottom == _line_top: # only 1 visible -- try get full line
+            offset_lines = [ (0, get_line(_line_top)) ]
+
+        else: # more than one line visible
+            # get lines -- to see which are too long -- to not get wrapinfo on huge lines
+            offset_lines = [(0, get_line(i))  for i in range(_line_top, _line_bottom + 1)]
+
+            if all(not item[1]  for item in offset_lines): # all lines are too big - nothing to return
+                return []
+
+            a_too_big = not bool(offset_lines[0][1])   # first (=a) visible line too big to process
+            z_too_big = not bool(offset_lines[-1][1])  # last (=z)  visibile ...
+
+            _wi_start_ind = _line_top + 1  if a_too_big else  _line_top
+            _wi_end_ind   = _line_bottom   if z_too_big else  _line_bottom + 1
+            wrapinfo = ed.get_wrapinfo(_wi_start_ind,  _wi_end_ind)
+
+            # visiible wrap-rows between first and last visible lines
+            _mid_rows_n = sum(_line_top < wi['line'] < _line_bottom  for wi in wrapinfo)
+            # unaccounted wrap-rows of text, can be end of first visible line, start of last, or both
+            h_miss = h - _mid_rows_n
+
+            # get end of first line (`a_end_txt`)  +  start of second (`z_start_txt`)
+            if not a_too_big:
+                # wrapinfo ind:  final part of first line
+                a_end = next(i for i,info in enumerate(wrapinfo)  if info['final'] == 0)
+                _a_miss_start = max(0,  a_end - h_miss)
+                a_x_offset = wrapinfo[_a_miss_start]['char']-1
+                _a_len     = wrapinfo[a_end        ]['char']-1 + wrapinfo[a_end      ]['len']
+
+                _a_txt     = offset_lines[0][1]
+                a_end_txt = _a_txt[a_x_offset:]
+                offset_lines[0] = (a_x_offset, a_end_txt)
+
+            if not z_too_big:
+                # wrapinfo ind (from end):  start of last line
+                _z_start = 1 + next(i for i,info in enumerate(reversed(wrapinfo))  if info['initial'])
+                _z_miss_end = min(-1, -_z_start + h_miss)
+                _z_x_end    = wrapinfo[_z_miss_end]['char']-1 + wrapinfo[_z_miss_end]['len']
+
+                _z_txt = offset_lines[-1][1]
+                z_start_txt = _z_txt[:_z_x_end]
+                offset_lines[-1] = (0, z_start_txt)
+    #end if wrap
+
+    re_pattern = re.escape(text)
+    if whole_words:
+        re_pattern = '\\b' + re_pattern + '\\b'
+    _re_flags = 0  if case_sensitive else  re.IGNORECASE
+
+    items = []
+    for i,(x_offset, line) in enumerate(offset_lines):
+        for m in re.finditer(re_pattern, line, flags=_re_flags):
+            items.append( (x_offset+m.start(), y0+i) )
+
+    return items
 
 
 def get_word_under_caret():
@@ -404,7 +512,8 @@ def process_ocurrences(sel_occurrences=False):
     global occurrences
 
     ed.attr(app.MARKERS_DELETE_BY_TAG, MARKTAG)
-    app.msg_status('')
+    if not disable_status_msgs:
+        app.msg_status('')
 
     if sel_occurrences:
         # In this part of the events, occurrences variable must have data.
@@ -422,7 +531,6 @@ def process_ocurrences(sel_occurrences=False):
         return occurrences
 
     else:
-
         # The highlight function on_caret event only works with one caret.
         if len(ed.get_carets()) != 1: return
 
@@ -452,8 +560,12 @@ def _get_occurrences(ignore_min_len=False):
     if not is_lexer_ok(lex):
         return
 
+    hili_full_doc = True
     if ed.get_line_count() > opt.MAX_LINES:
-        return
+        if opt.VISIBLE_FALLBACK:
+            hili_full_doc = False
+        else:
+            return
 
     current_text = _get_current_text()
     if not current_text: return
@@ -492,7 +604,10 @@ def _get_occurrences(ignore_min_len=False):
             log("Returning previous occurrences")
             return prev_items, text, is_selection, x1, y1
 
-    items = find_all_occurrences(text, case_sensitive, whole_words)
+    if hili_full_doc:
+        items = find_all_occurrences(text, case_sensitive, whole_words)
+    else: # only visible
+        items = find_visible_occurrences(text, case_sensitive, whole_words)
 
     if not items or (len(items) == 1 and items[0] == (x1, y1)):
         return

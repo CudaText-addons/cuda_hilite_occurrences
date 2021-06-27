@@ -4,11 +4,12 @@ desc=Highlights/Marks all occurrences of current/selected word/fragment
 type=cudatext-plugin
 subdir=cuda_hilite_occurrences
 homepage=https://github.com/CudaText-addons/cuda_hilite_occurrences
-api=1.0.357
+api=1.0.396
 
 [item1]
 section=events
-events=on_caret,on_state,on_change_slow
+; real event list is in `__init__.py/do_load_ops()`
+events=on_caret
 
 [item2]
 section=commands
