@@ -47,14 +47,14 @@ def get_opt(path, val):
     return appx.get_opt(path, val, user_json=fn_config)
 
 
-def get_line(n):
+def get_line(ed_self, n):
     # limit max length of line
-    return ed.get_text_line(n, opt.MAX_LINE_LEN)
+    return ed_self.get_text_line(n, opt.MAX_LINE_LEN)
 
-def get_area_lines(x, y, w, h):
+def get_area_lines(ed_self, x, y, w, h):
     lines = []
     for i in range(h):
-        line = ed.get_text_substr(x,y+i, x+w,y+i)
+        line = ed_self.get_text_substr(x,y+i, x+w,y+i)
         lines.append(line)
     return lines
 
@@ -167,7 +167,7 @@ class Command:
         global time_start
         time_start = time.time()
 
-        res = process_ocurrences()
+        res = process_ocurrences(ed_self)
         if not res:
             return
 
@@ -196,7 +196,7 @@ class Command:
     def select_all(self):
         global on_event_disabled
 
-        res = process_ocurrences(sel_occurrences=True)
+        res = process_ocurrences(ed, sel_occurrences=True)
         if not res:
             return
 
@@ -291,25 +291,25 @@ def is_word(s, lexer):
     return True
 
 
-def find_all_occurrences(text, case_sensitive, whole_words):
+def find_all_occurrences(ed_self, text, case_sensitive, whole_words):
     """
     Finding matches to highlight
     """
 
     opts = ('c' if case_sensitive else '') + ('w' if whole_words else '')
-    log("Calling ed.action: EDACTION_FIND_ALL")
-    res = ed.action(app.EDACTION_FIND_ALL, text, opts, opt.MAX_LINE_LEN)
+    log("Calling ed_self.action: EDACTION_FIND_ALL")
+    res = ed_self.action(app.EDACTION_FIND_ALL, text, opts, opt.MAX_LINE_LEN)
     res = [r[:2] for r in res]
     return res
 
-def find_visible_occurrences(text, case_sensitive, whole_words):
+def find_visible_occurrences(ed_self, text, case_sensitive, whole_words):
     text_len = len(text)
 
-    wrap_type = ed.get_prop(app.PROP_WRAP)
-    scroll_x  = ed.get_prop(app.PROP_SCROLL_HORZ)
-    scroll_y  = ed.get_prop(app.PROP_SCROLL_VERT)
-    w         = ed.get_prop(app.PROP_VISIBLE_COLUMNS)
-    h         = ed.get_prop(app.PROP_VISIBLE_LINES)
+    wrap_type = ed_self.get_prop(app.PROP_WRAP)
+    scroll_x  = ed_self.get_prop(app.PROP_SCROLL_HORZ)
+    scroll_y  = ed_self.get_prop(app.PROP_SCROLL_VERT)
+    w         = ed_self.get_prop(app.PROP_VISIBLE_COLUMNS)
+    h         = ed_self.get_prop(app.PROP_VISIBLE_LINES)
 
     offset_lines = [] # list of tuples: (x_offset, line_str_part)
     if wrap_type == app.WRAP_OFF:
@@ -317,18 +317,18 @@ def find_visible_occurrences(text, case_sensitive, whole_words):
         w += text_len -1
         h += 1 # include last visible
 
-        offset_lines = [(x0, line) for line in get_area_lines(x0,y0, w,h)]
+        offset_lines = [(x0, line) for line in get_area_lines(ed_self, x0,y0, w,h)]
     else:   # wrap=on
-        _line_top    = ed.get_prop(app.PROP_LINE_TOP)
-        _line_bottom = ed.get_prop(app.PROP_LINE_BOTTOM)
+        _line_top    = ed_self.get_prop(app.PROP_LINE_TOP)
+        _line_bottom = ed_self.get_prop(app.PROP_LINE_BOTTOM)
         y0 = _line_top # y offset
 
         if _line_bottom == _line_top: # only 1 visible -- try get full line
-            offset_lines = [ (0, get_line(_line_top)) ]
+            offset_lines = [ (0, get_line(ed_self, _line_top)) ]
 
         else: # more than one line visible
             # get lines -- to see which are too long -- to not get wrapinfo on huge lines
-            offset_lines = [(0, get_line(i))  for i in range(_line_top, _line_bottom + 1)]
+            offset_lines = [(0, get_line(ed_self, i))  for i in range(_line_top, _line_bottom + 1)]
 
             if all(not item[1]  for item in offset_lines): # all lines are too big - nothing to return
                 return []
@@ -338,7 +338,7 @@ def find_visible_occurrences(text, case_sensitive, whole_words):
 
             _wi_start_ind = _line_top + 1  if a_too_big else  _line_top
             _wi_end_ind   = _line_bottom   if z_too_big else  _line_bottom + 1
-            wrapinfo = ed.get_wrapinfo(_wi_start_ind,  _wi_end_ind)
+            wrapinfo = ed_self.get_wrapinfo(_wi_start_ind,  _wi_end_ind)
 
             # visiible wrap-rows between first and last visible lines
             _mid_rows_n = sum(_line_top < wi['line'] < _line_bottom  for wi in wrapinfo)
@@ -381,21 +381,21 @@ def find_visible_occurrences(text, case_sensitive, whole_words):
     return items
 
 
-def get_word_under_caret():
+def get_word_under_caret(ed_self):
     """
     Gets a tuple (word_under_caret, (x1, y1, x2, y2)) containing the word under
     the current caret.
     """
 
-    lex = ed.get_prop(app.PROP_LEXER_CARET)
+    lex = ed_self.get_prop(app.PROP_LEXER_CARET)
 
-    carets = ed.get_carets()
+    carets = ed_self.get_carets()
 
     # In this point the "one caret" rule is valid, so x2 and y2 is equal to -1
     # and there is no a selection
     x1, y1 = carets[0][:2]
 
-    current_line = get_line(y1)
+    current_line = get_line(ed_self, y1)
     # if len(current_line) > opt.MAX_LINE_LEN: return
 
     n_x1 = n_x2 = x1
@@ -420,8 +420,8 @@ def get_word_under_caret():
     return word_under_caret, (n_x1, y1, n_x2, y1)
 
 
-def _get_current_text():
-    caret_pos = ed.get_carets()[0]
+def _get_current_text(ed_self):
+    caret_pos = ed_self.get_carets()[0]
 
     x1, y1, x2, y2 = caret_pos
 
@@ -441,17 +441,17 @@ def _get_current_text():
             # No multi-line allowed
             if (y2 - y1) > 0: return
 
-            current_text = ed.get_text_sel()
+            current_text = ed_self.get_text_sel()
         else:
             return
     else:
         # Sometimes caret can be beyond text end
-        temp = get_line(y1)
+        temp = get_line(ed_self, y1)
         if (temp is None) or (len(temp) < x1): return
         # if len(temp) > opt.MAX_LINE_LEN: return
 
         if opt.CARET_ALLOW:
-            temp = get_word_under_caret()
+            temp = get_word_under_caret(ed_self)
             if not temp: return
             current_text, caret_pos = temp
 
@@ -508,10 +508,10 @@ def move_caret(mode):
     on_event_disabled = False
 
 
-def process_ocurrences(sel_occurrences=False):
+def process_ocurrences(ed_self, sel_occurrences=False):
     global occurrences
 
-    ed.attr(app.MARKERS_DELETE_BY_TAG, MARKTAG)
+    ed_self.attr(app.MARKERS_DELETE_BY_TAG, MARKTAG)
     if not disable_status_msgs:
         app.msg_status('')
 
@@ -520,7 +520,7 @@ def process_ocurrences(sel_occurrences=False):
         # If not, force matches considering no min length selection.
         if len(occurrences) == 0 and opt.MARK_IGNORE_MIN_LEN:
             log("No previous occurrences information")
-            res = _get_occurrences(sel_occurrences)
+            res = _get_occurrences(ed_self, sel_occurrences)
 
             if not res:
                 occurrences = ()
@@ -532,9 +532,9 @@ def process_ocurrences(sel_occurrences=False):
 
     else:
         # The highlight function on_caret event only works with one caret.
-        if len(ed.get_carets()) != 1: return
+        if len(ed_self.get_carets()) != 1: return
 
-        res = _get_occurrences()
+        res = _get_occurrences(ed_self)
 
         if res is None:
             occurrences = ()
@@ -545,7 +545,7 @@ def process_ocurrences(sel_occurrences=False):
         return occurrences
 
 
-def _get_occurrences(ignore_min_len=False):
+def _get_occurrences(ed_self, ignore_min_len=False):
     """
     Gets a tuple (items, text, is_selection, x1, y1) containing all the
     occurrences for the selected word or for the word under current caret.
@@ -553,7 +553,7 @@ def _get_occurrences(ignore_min_len=False):
     """
     global occurrences
 
-    lex = ed.get_prop(app.PROP_LEXER_FILE)
+    lex = ed_self.get_prop(app.PROP_LEXER_FILE)
 
     if not lex:
         lex = '-'
@@ -561,13 +561,13 @@ def _get_occurrences(ignore_min_len=False):
         return
 
     hili_full_doc = True
-    if ed.get_line_count() > opt.MAX_LINES:
+    if ed_self.get_line_count() > opt.MAX_LINES:
         if opt.VISIBLE_FALLBACK:
             hili_full_doc = False
         else:
             return
 
-    current_text = _get_current_text()
+    current_text = _get_current_text(ed_self)
     if not current_text: return
 
     text, caret_pos, is_selection = current_text
@@ -605,9 +605,9 @@ def _get_occurrences(ignore_min_len=False):
             return prev_items, text, is_selection, x1, y1
 
     if hili_full_doc:
-        items = find_all_occurrences(text, case_sensitive, whole_words)
+        items = find_all_occurrences(ed_self, text, case_sensitive, whole_words)
     else: # only visible
-        items = find_visible_occurrences(text, case_sensitive, whole_words)
+        items = find_visible_occurrences(ed_self, text, case_sensitive, whole_words)
 
     if not items or (len(items) == 1 and items[0] == (x1, y1)):
         return
