@@ -1,4 +1,7 @@
 
+2021.07.17
+- fix: prevent a crash on deleting last document lines
+
 2021.06.27 (patch by @halfbrained)
 + add: option "visible_fallback", to highlight occurrences only in visible part of large documents
        (when document is bigger than "max_lines" allows) 
