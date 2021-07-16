@@ -375,8 +375,9 @@ def find_visible_occurrences(ed_self, text, case_sensitive, whole_words):
 
     items = []
     for i,(x_offset, line) in enumerate(offset_lines):
-        for m in re.finditer(re_pattern, line, flags=_re_flags):
-            items.append( (x_offset+m.start(), y0+i) )
+        if line: # prevent crash if line is None
+            for m in re.finditer(re_pattern, line, flags=_re_flags):
+                items.append( (x_offset+m.start(), y0+i) )
 
     return items
 
