@@ -178,8 +178,8 @@ class Command:
 
         if on_event_disabled:
             return
+        abort = False
         if not opt.CARET_ALLOW:
-            abort = False
             if opt.SEL_ALLOW:
                 carets = ed.get_carets()
                 if len(carets) != 1  or  carets[0][3] < 0:   # invalid/no selection
