@@ -1,5 +1,6 @@
 
 2021.07.17
++ add: i18n for Config dialog (patch by Marcus F.)
 - fix: prevent a crash on deleting last document lines
 
 2021.06.27 (patch by @halfbrained)
