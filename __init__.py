@@ -179,6 +179,15 @@ class Command:
         if on_event_disabled:
             return
         if not opt.CARET_ALLOW:
+            abort = False
+            if opt.SEL_ALLOW:
+                carets = ed.get_carets()
+                if len(carets) != 1  or  carets[0][3] < 0:   # invalid/no selection
+                    abort = True
+            else:
+                abort = True
+
+        if abort:
             occurrences = ()
             return
         self.work(ed_self)
@@ -268,16 +277,16 @@ def paint_occurrences(ed_self, occurrences):
                  border_down=opt.BRD_OTHER,
                  )
 
-    if opt.CARET_ALLOW and not is_selection:
-        ed_self.attr(app.MARKERS_ADD, MARKTAG, x0, y0, nlen,
-                     color_font=opt.COLOR_FONT_CURRENT,
-                     color_bg=opt.COLOR_BG_CURRENT,
-                     color_border=opt.COLOR_BRD_CURRENT,
-                     border_left=opt.BRD_CURRENT,
-                     border_right=opt.BRD_CURRENT,
-                     border_up=opt.BRD_CURRENT,
-                     border_down=opt.BRD_CURRENT,
-                     )
+    #if opt.CARET_ALLOW and not is_selection:
+    ed_self.attr(app.MARKERS_ADD, MARKTAG, x0, y0, nlen,
+                 color_font=opt.COLOR_FONT_CURRENT,
+                 color_bg=opt.COLOR_BG_CURRENT,
+                 color_border=opt.COLOR_BRD_CURRENT,
+                 border_left=opt.BRD_CURRENT,
+                 border_right=opt.BRD_CURRENT,
+                 border_up=opt.BRD_CURRENT,
+                 border_down=opt.BRD_CURRENT,
+                 )
 
     tick = round((time.time() - time_start) * 1000)
     if not disable_status_msgs:
