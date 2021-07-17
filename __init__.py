@@ -174,8 +174,23 @@ class Command:
         paint_occurrences(ed_self, res)
 
     def on_caret(self, ed_self):
+        global occurrences
+
         if on_event_disabled:
             return
+        if not opt.CARET_ALLOW:
+            abort = False
+            if opt.SEL_ALLOW:
+                carets = ed.get_carets()
+                if len(carets) != 1  or  carets[0][3] < 0:   # invalid/no selection
+                    abort = True
+            else:
+                abort = True
+
+            if abort:
+                occurrences = ()
+                return
+
         self.work(ed_self)
 
     def on_change_slow(self, ed_self):
@@ -263,16 +278,16 @@ def paint_occurrences(ed_self, occurrences):
                  border_down=opt.BRD_OTHER,
                  )
 
-    if opt.CARET_ALLOW and not is_selection:
-        ed_self.attr(app.MARKERS_ADD, MARKTAG, x0, y0, nlen,
-                     color_font=opt.COLOR_FONT_CURRENT,
-                     color_bg=opt.COLOR_BG_CURRENT,
-                     color_border=opt.COLOR_BRD_CURRENT,
-                     border_left=opt.BRD_CURRENT,
-                     border_right=opt.BRD_CURRENT,
-                     border_up=opt.BRD_CURRENT,
-                     border_down=opt.BRD_CURRENT,
-                     )
+    #if opt.CARET_ALLOW and not is_selection:
+    ed_self.attr(app.MARKERS_ADD, MARKTAG, x0, y0, nlen,
+                 color_font=opt.COLOR_FONT_CURRENT,
+                 color_bg=opt.COLOR_BG_CURRENT,
+                 color_border=opt.COLOR_BRD_CURRENT,
+                 border_left=opt.BRD_CURRENT,
+                 border_right=opt.BRD_CURRENT,
+                 border_up=opt.BRD_CURRENT,
+                 border_down=opt.BRD_CURRENT,
+                 )
 
     tick = round((time.time() - time_start) * 1000)
     if not disable_status_msgs:
@@ -464,7 +479,12 @@ def move_caret(mode):
     global on_event_disabled
 
     if len(occurrences) == 0:
-        return
+        if opt.CARET_ALLOW:
+            return
+        else:
+            res = process_ocurrences(ed, sel_occurrences=True)
+            if not res:
+                return
 
     items, text, is_selection = occurrences[:3]
 
@@ -519,7 +539,7 @@ def process_ocurrences(ed_self, sel_occurrences=False):
     if sel_occurrences:
         # In this part of the events, occurrences variable must have data.
         # If not, force matches considering no min length selection.
-        if len(occurrences) == 0 and opt.MARK_IGNORE_MIN_LEN:
+        if len(occurrences) == 0 and (opt.MARK_IGNORE_MIN_LEN or not opt.CARET_ALLOW):
             log("No previous occurrences information")
             res = _get_occurrences(ed_self, sel_occurrences)
 
