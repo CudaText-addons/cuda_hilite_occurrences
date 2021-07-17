@@ -174,7 +174,12 @@ class Command:
         paint_occurrences(ed_self, res)
 
     def on_caret(self, ed_self):
+        global occurrences
+
         if on_event_disabled:
+            return
+        if not opt.CARET_ALLOW:
+            occurrences = ()
             return
         self.work(ed_self)
 
@@ -463,7 +468,12 @@ def move_caret(mode):
     global on_event_disabled
 
     if len(occurrences) == 0:
-        return
+        if opt.CARET_ALLOW:
+            return
+        else:
+            res = process_ocurrences(ed, sel_occurrences=True)
+            if not res:
+                return
 
     items, text, is_selection = occurrences[:3]
 
@@ -518,7 +528,7 @@ def process_ocurrences(ed_self, sel_occurrences=False):
     if sel_occurrences:
         # In this part of the events, occurrences variable must have data.
         # If not, force matches considering no min length selection.
-        if len(occurrences) == 0 and opt.MARK_IGNORE_MIN_LEN:
+        if len(occurrences) == 0 and (opt.MARK_IGNORE_MIN_LEN or not opt.CARET_ALLOW):
             log("No previous occurrences information")
             res = _get_occurrences(ed_self, sel_occurrences)
 
