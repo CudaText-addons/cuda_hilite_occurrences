@@ -1,3 +1,6 @@
+from cudax_lib import get_translation
+_ = get_translation(__file__)  # I18N
+
 MIN_LEN = 2
 MAX_LINES = 5000
 MAX_LINE_LEN = 500
@@ -33,107 +36,107 @@ BRD_CURRENT = 0
 ALLOWED_ITEMS = ['IncludeBG1', 'IncludeBG2', 'IncludeBG3', 'IncludeBG4', 'SectionBG1', 'SectionBG2', 'SectionBG3', 'SectionBG4', 'BracketBG', 'CurBlockBG', 'LightBG1', 'LightBG2', 'LightBG3', 'LightBG4', 'LightBG5']
 META_OPT = [
         {   "opt": "min_len",
-            "cmt": ["Minimal length of fragment to handle"],
+            "cmt": [_("Minimal length of fragment to handle")],
             "def": 2,
             "frm": "int",
             "chp": ""
         },
         {   "opt": "max_lines",
-            "cmt": ["Maximal number of lines in document, when plugin is still active"],
+            "cmt": [_("Maximal number of lines in document, when plugin is still active")],
             "def": 5000,
             "frm": "int",
             "chp": ""
         },
         {   "opt": "max_line_len",
-            "cmt": ["Maximal length of lines, which will be handled by plugin (plugin will skip longer lines)"],
+            "cmt": [_("Maximal length of lines, which will be handled by plugin (plugin will skip longer lines)")],
             "def": 500,
             "frm": "int",
             "chp": ""
         },
         {   "opt": "sel_allow",
-            "cmt": ["Plugin handles current selection (on selection changing)"],
+            "cmt": [_("Plugin handles current selection (on selection changing)")],
             "def": True,
             "frm": "bool",
             "chp": ""
         },
         {   "opt": "sel_allow_spaces",
-            "cmt": ["Use also whitespace in selection, otherwise trim it"],
+            "cmt": [_("Use also whitespace in selection, otherwise trim it")],
             "def": False,
             "frm": "bool",
             "chp": ""
         },
         {   "opt": "sel_case_sens",
-            "cmt": ["Search for selection is case-sensitive"],
+            "cmt": [_("Search for selection is case-sensitive")],
             "def": False,
             "frm": "bool",
             "chp": ""
         },
         {   "opt": "sel_words_only",
-            "cmt": ["Plugin handles selection only when it is whole word"],
+            "cmt": [_("Plugin handles selection only when it is whole word")],
             "def": False,
             "frm": "bool",
             "chp": ""
         },
         {   "opt": "sel_whole_words",
-            "cmt": ["Search for selection finds whole words only"],
+            "cmt": [_("Search for selection finds whole words only")],
             "def": False,
             "frm": "bool",
             "chp": ""
         },
         {   "opt": "mark_ignore_min_len",
-            "cmt": ["Mark occurrences of selected text ignores 'min_len' option"],
+            "cmt": [_("Mark occurrences of selected text ignores 'min_len' option")],
             "def": False,
             "frm": "bool",
             "chp": ""
         },
         {   "opt": "visible_fallback",
-            "cmt": ["When text is over max_lines - fallback to highlighting only in visible text"],
+            "cmt": [_("When text is over max_lines - fallback to highlighting only in visible text")],
             "def": False,
             "frm": "bool",
             "chp": ""
         },
         {   "opt": "caret_allow",
-            "cmt": ["Plugin handles word under caret (on caret moving)"],
+            "cmt": [_("Plugin handles word under caret (on caret moving)")],
             "def": True,
             "frm": "bool",
             "chp": ""
         },
         {   "opt": "caret_case_sens",
-            "cmt": ["Search for word under caret is case-sensitive"],
+            "cmt": [_("Search for word under caret is case-sensitive")],
             "def": True,
             "frm": "bool",
             "chp": ""
         },
         {   "opt": "caret_whole_words",
-            "cmt": ["Search for word under caret finds whole words only"],
+            "cmt": [_("Search for word under caret finds whole words only")],
             "def": True,
             "frm": "bool",
             "chp": ""
         },
         {   "opt": "theme_item_current",
-            "cmt": ["Element of syntax-theme, which color is used for word under caret"],
+            "cmt": [_("Element of syntax-theme, which color is used for word under caret")],
             "def": "BracketBG",
             "frm": "strs",
             "lst": ALLOWED_ITEMS,
             "chp": ""
         },
         {   "opt": "theme_item_other",
-            "cmt": ["Element of syntax-theme, which color is used for other found matches"],
+            "cmt": [_("Element of syntax-theme, which color is used for other found matches")],
             "def": "BracketBG",
             "frm": "strs",
             "lst": ALLOWED_ITEMS,
             "chp": ""
         },
         {   "opt": "lexers_allowed",
-            "cmt": ["If not empty, then plugin is active only for mentioned lexers. Comma-separated list.",
-                    "None-lexer must be written as '-'."],
+            "cmt": [_("If not empty, then plugin is active only for mentioned lexers. Comma-separated list."),
+                    _("None-lexer must be written as '-'.")],
             "def": "",
             "frm": "str",
             "chp": ""
         },
         {   "opt": "lexers_disabled",
-            "cmt": ["If not empty, then plugin is disabled for mentioned lexers. Comma-separated list.",
-                    "Has higher priority than option 'lexers_allowed'."],
+            "cmt": [_("If not empty, then plugin is disabled for mentioned lexers. Comma-separated list."),
+                    _("Has higher priority than option 'lexers_allowed'.")],
             "def": "",
             "frm": "str",
             "chp": ""
