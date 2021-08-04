@@ -461,15 +461,16 @@ def _get_current_text(ed_self):
         else:
             return
     else:
+        if not opt.CARET_ALLOW:
+            return
         # Sometimes caret can be beyond text end
         temp = get_line(ed_self, y1)
         if (temp is None) or (len(temp) < x1): return
         # if len(temp) > opt.MAX_LINE_LEN: return
 
-        if opt.CARET_ALLOW:
-            temp = get_word_under_caret(ed_self)
-            if not temp: return
-            current_text, caret_pos = temp
+        temp = get_word_under_caret(ed_self)
+        if not temp: return
+        current_text, caret_pos = temp
 
     return current_text, caret_pos, is_selection
 
