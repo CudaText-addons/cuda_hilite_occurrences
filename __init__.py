@@ -535,7 +535,8 @@ def process_ocurrences(ed_self, sel_occurrences=False):
 
     ed_self.attr(app.MARKERS_DELETE_BY_TAG, MARKTAG)
     if not disable_status_msgs:
-        app.msg_status('')
+        #app.msg_status('')  # disable this, see https://github.com/Alexey-T/CudaText/issues/4206
+        pass
 
     if sel_occurrences:
         # In this part of the events, occurrences variable must have data.
