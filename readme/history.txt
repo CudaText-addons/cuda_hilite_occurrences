@@ -1,4 +1,7 @@
 
+2022.07.06
+- fix: plugin slowed down the editor text selection (patch by @veksha)
+
 2021.07.17
 + add: i18n for Config dialog (patch by Marcus F.)
 - fix: prevent a crash on deleting last document lines
