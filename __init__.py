@@ -183,6 +183,7 @@ class Command:
             if opt.SEL_ALLOW:
                 carets = ed.get_carets()
                 if len(carets) != 1  or  carets[0][3] < 0:   # invalid/no selection
+                    ed_self.attr(app.MARKERS_DELETE_BY_TAG, MARKTAG)
                     abort = True
             else:
                 abort = True
