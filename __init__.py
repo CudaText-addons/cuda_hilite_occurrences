@@ -330,7 +330,7 @@ def find_visible_occurrences(ed_self, text, case_sensitive, whole_words):
     offset_lines = [] # list of tuples: (x_offset, line_str_part)
     if wrap_type == app.WRAP_OFF:
         x0,y0 = scroll_x,scroll_y
-        w += text_len -1
+        w += text_len + 1 # +1 to make sure the last barely visible word id hilited too
         h += 1 # include last visible
 
         offset_lines = [(x0, line) for line in get_area_lines(ed_self, x0,y0, w,h)]
