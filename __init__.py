@@ -25,8 +25,8 @@ occurrences = ()
 # event
 on_event_disabled = False
 disable_status_msgs = False
-
 time_start = 0
+hili_full_doc = True
 
 class Moves(Enum):
     MOVE_FIRST = 0
@@ -293,8 +293,11 @@ def paint_occurrences(ed_self, occurrences):
 
     tick = round((time.time() - time_start) * 1000)
     if not disable_status_msgs:
-        app.msg_status(_('Matches highlighted: {}/{} ({}ms)').format(idx, ncount, tick))
-
+        if hili_full_doc:
+            #app.msg_status(_('Matches highlighted:')+' {}/{} ({}ms)'.format(idx, ncount, tick))
+            app.msg_status(_('Matches highlighted:')+' {}/{}'.format(idx, ncount))
+        else:
+            app.msg_status(_('Matches highlighted:')+' {}/{} '.format(idx, ncount)+_('(partial)'))
 
 def is_word(s, lexer):
     bads = NONWORD.get(lexer)
@@ -576,6 +579,7 @@ def _get_occurrences(ed_self, ignore_min_len=False):
     occurrences for the selected word or for the word under current caret.
     param: ignore_min_len works only with selections.
     """
+    global hili_full_doc
     global occurrences
 
     lex = ed_self.get_prop(app.PROP_LEXER_FILE)
