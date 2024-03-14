@@ -1,4 +1,4 @@
-import time
+#import time
 import datetime
 import re
 from enum import Enum
@@ -164,8 +164,8 @@ class Command:
             self.on_caret(ed)
 
     def work(self, ed_self):
-        global time_start
-        time_start = time.time()
+        #global time_start
+        #time_start = time.time()
 
         res = process_ocurrences(ed_self)
         if not res:
@@ -291,7 +291,7 @@ def paint_occurrences(ed_self, occurrences):
                  border_down=opt.BRD_CURRENT,
                  )
 
-    tick = round((time.time() - time_start) * 1000)
+    #tick = round((time.time() - time_start) * 1000)
     if not disable_status_msgs:
         if hili_full_doc:
             #app.msg_status(_('Matches highlighted:')+' {}/{} ({}ms)'.format(idx, ncount, tick))
