@@ -91,7 +91,7 @@ META_OPT = [
         },
         {   "opt": "visible_fallback",
             "cmt": [_("When text is over max_lines - fallback to highlighting only in visible text")],
-            "def": False,
+            "def": True,
             "frm": "bool",
             "chp": ""
         },
