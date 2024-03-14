@@ -169,6 +169,7 @@ class Command:
 
         res = process_ocurrences(ed_self)
         if not res:
+            app.msg_status('')
             return
 
         paint_occurrences(ed_self, res)
