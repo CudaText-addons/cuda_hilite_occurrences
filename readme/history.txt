@@ -1,3 +1,6 @@
+2024.03.14
+* change: option "visible_fallback" default changed to True
+* change: remove 'N ms' time display from statusbar msg; add '(partial)' to statusbar msg if plugin calculates only visible matches (by @pintassilgo)
 
 2022.10.03
 - fix: with "caret_allow":false / "sel_allow":true, removing selection must remove placed markers
