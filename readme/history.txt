@@ -1,5 +1,6 @@
 2024.03.16
 * change: option "max_line_len" default changed to 800k
+* change: option "min_len" default changed to 1
 * change: option "visible_fallback" default changed to True
 * change: remove 'N ms' time display from statusbar msg; add '(partial)' to statusbar msg if plugin calculates only visible matches (by @pintassilgo)
 

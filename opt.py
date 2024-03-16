@@ -1,7 +1,7 @@
 from cudax_lib import get_translation
 _ = get_translation(__file__)  # I18N
 
-MIN_LEN = 2
+MIN_LEN = 1
 MAX_LINES = 5000
 MAX_LINE_LEN = 800000
 
@@ -37,7 +37,7 @@ ALLOWED_ITEMS = ['IncludeBG1', 'IncludeBG2', 'IncludeBG3', 'IncludeBG4', 'Sectio
 META_OPT = [
         {   "opt": "min_len",
             "cmt": [_("Minimal length of fragment to handle")],
-            "def": 2,
+            "def": 1,
             "frm": "int",
             "chp": ""
         },

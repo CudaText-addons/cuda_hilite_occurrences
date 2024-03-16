@@ -26,7 +26,7 @@ To set hotkeys for commands, use F9 functionality in the Command Palette (Ctrl+S
 Plugin has options dialog, call it by "Options / Settings-plugins / Highlight Occurrences".
 
 Options:
-- "min_len"            : (def=2)           : Minimal length of fragment to handle
+- "min_len"            : (def=1)           : Minimal length of fragment to handle
 - "max_lines"          : (def=5000)        : Maximal number of lines in document (plugin will disable highlight functionality)
 - "max_line_len"       : (def=800000)      : Maximal length of lines, which will be handled by plugin (plugin will skip longer lines)
 - "sel_allow"          : (def=True)        : Plugin handles current selection (on selection changing)
