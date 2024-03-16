@@ -3,7 +3,7 @@ _ = get_translation(__file__)  # I18N
 
 MIN_LEN = 2
 MAX_LINES = 5000
-MAX_LINE_LEN = 500
+MAX_LINE_LEN = 800000
 
 SEL_ALLOW             = True  # Highlight all occurrences of selected text.
 SEL_ALLOW_WHITE_SPACE = False # Highlight spaces there located in begin or end of selection
@@ -49,7 +49,7 @@ META_OPT = [
         },
         {   "opt": "max_line_len",
             "cmt": [_("Maximal length of lines, which will be handled by plugin (plugin will skip longer lines)")],
-            "def": 500,
+            "def": 800000,
             "frm": "int",
             "chp": ""
         },
