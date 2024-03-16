@@ -12,7 +12,7 @@ SEL_WORDS_ONLY        = False # Highlight character only if it contains in CHARS
 SEL_WHOLE_WORDS       = False # Whole word only. Used only if bool(SEL_WORDS_ONLY) == True.
 
 MARK_IGNORE_MIN_LEN   = False
-VISIBLE_FALLBACK      = False
+VISIBLE_FALLBACK      = True
 
 CARET_ALLOW           = True # Highlight all occurrences of word under caret.
 CARET_CASE_SENSITIVE  = True
