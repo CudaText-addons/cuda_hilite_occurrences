@@ -330,7 +330,10 @@ def find_all_occurrences(ed_self, text, case_sensitive, whole_words):
     return res
 
 def find_visible_occurrences(ed_self: app.Editor, text, case_sensitive, whole_words):
-    '''Find occurrences in the visible part of screen only'''
+    '''
+    Find matches only in the visible part of the screen.
+    Withing only visible part of huge lines.
+    '''
 
     global in_on_caret
     in_on_caret = True
@@ -384,7 +387,7 @@ def find_visible_occurrences(ed_self: app.Editor, text, case_sensitive, whole_wo
     # restore old caret(s)
     if len(old_carets)==1:
         x, y, x2, y2 = old_carets[0]
-        ed_self.set_caret(x, y, x2, y2)
+        ed_self.set_caret(x, y, x2, y2, options=app.CARET_OPTION_NO_SCROLL)
     else:
         ed_self.set_caret(0, 0, -1, -1, app.CARET_DELETE_ALL)
         for x, y, x2, y2 in old_carets:
