@@ -44,7 +44,7 @@ META_OPT = [
         },
         {   "opt": "max_lines",
             "cmt": [_("Maximal number of lines in document, when plugin is still active")],
-            "def": 5000,
+            "def": 1000,
             "frm": "int",
             "chp": ""
         },
