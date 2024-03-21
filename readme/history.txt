@@ -1,5 +1,5 @@
 2024.03.21
-+ add/change: search 'in the visible area only' is rewritten, it must be much faster on huge lines
++ add/change: search 'in the visible area only' is rewritten, it must be much faster on huge lines; this option is also auto-activated if horizontal-scrollbar-max is bigger than 500 chars
 
 2024.03.16
 * change: option "max_line_len" default changed to 800k
