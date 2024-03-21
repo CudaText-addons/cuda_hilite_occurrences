@@ -381,10 +381,14 @@ def find_visible_occurrences(ed_self: app.Editor, text, case_sensitive, whole_wo
     res = [r[:2] for r in res]
     #print('res:', res)
 
-    # restore old carets
-    ed_self.set_caret(0, 0, -1, -1, app.CARET_DELETE_ALL)
-    for x, y, x2, y2 in old_carets:
-        ed_self.set_caret(x, y, x2, y2, app.CARET_ADD, options=app.CARET_OPTION_NO_SCROLL)
+    # restore old caret(s)
+    if len(old_carets)==1:
+        x, y, x2, y2 = old_carets[0]
+        ed_self.set_caret(x, y, x2, y2)
+    else:
+        ed_self.set_caret(0, 0, -1, -1, app.CARET_DELETE_ALL)
+        for x, y, x2, y2 in old_carets:
+            ed_self.set_caret(x, y, x2, y2, app.CARET_ADD, options=app.CARET_OPTION_NO_SCROLL)
 
     in_on_caret = False
     return res
