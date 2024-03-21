@@ -27,7 +27,7 @@ Plugin has options dialog, call it by "Options / Settings-plugins / Highlight Oc
 
 Options:
 - "min_len"            : (def=1)           : Minimal length of fragment to handle
-- "max_lines"          : (def=5000)        : Maximal number of lines in document (plugin will disable highlight functionality)
+- "max_lines"          : (def=1000)        : Maximal number of lines in document; when bigger: code highlights only _visible_ occurrences (much faster)
 - "max_line_len"       : (def=800000)      : Maximal length of lines, which will be handled by plugin (plugin will skip longer lines)
 - "sel_allow"          : (def=True)        : Plugin handles current selection (on selection changing)
 - "sel_allow_spaces"   : (def=False)       : Plugin allows whitespace in selection, otherwise trim it
