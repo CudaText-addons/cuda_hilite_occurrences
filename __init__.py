@@ -348,10 +348,14 @@ def find_visible_occurrences(ed_self: app.Editor, text, case_sensitive, whole_wo
         ed_self.set_caret(0, 0, -1, -1, app.CARET_DELETE_ALL)
         for y in range(line_top, line_btm+1):
             nlen = ed_self.get_line_len(y)
+            x_from = min(nlen, scroll_x)
+            x_to = min(nlen, scroll_x + scroll_w + text_len*2 + 1)
+            if x_from==x_to:
+                continue
             ed_self.set_caret(
-                min(nlen, scroll_x),
+                x_from,
                 y,
-                min(nlen, scroll_x + scroll_w + text_len*2 + 1),
+                x_to,
                 y,
                 app.CARET_ADD,
                 options=app.CARET_OPTION_NO_SCROLL
@@ -368,10 +372,11 @@ def find_visible_occurrences(ed_self: app.Editor, text, case_sensitive, whole_wo
     #end if wrap
 
     opts = ('c' if case_sensitive else '') + ('w' if whole_words else '') + 's' # search in selections only
-    #print('carets:', ed_self.get_carets())
-    #print("text: '{}', opts: '{}'".format(text, opts))
+    print('carets:', ed_self.get_carets())
+    print("text: '{}', opts: '{}'".format(text, opts))
     res = ed_self.action(app.EDACTION_FIND_ALL, text, opts, 0x7FFFFFFF)
     res = [r[:2] for r in res]
+    print('res:', res)
 
     # restore old carets
     ed_self.set_caret(0, 0, -1, -1, app.CARET_DELETE_ALL)
@@ -379,7 +384,6 @@ def find_visible_occurrences(ed_self: app.Editor, text, case_sensitive, whole_wo
         ed_self.set_caret(x, y, x2, y2, app.CARET_ADD, options=app.CARET_OPTION_NO_SCROLL)
 
     in_on_caret = False
-    #print('res:', res)
     return res
 
 
