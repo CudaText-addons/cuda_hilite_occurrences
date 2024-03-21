@@ -343,9 +343,10 @@ def find_visible_occurrences(ed_self: app.Editor, text, case_sensitive, whole_wo
     scroll_x = max(0, scroll_horz['pos'] - text_len)
     scroll_w = scroll_horz['page']
     old_carets = ed_self.get_carets()
+    opts = ('c' if case_sensitive else '') + ('w' if whole_words else '') + 's' # search in selections only
 
     if wrap_type == app.WRAP_OFF:
-        ed_self.set_caret(0, 0, -1, -1, app.CARET_DELETE_ALL)
+        res = []
         for y in range(line_top, line_btm+1):
             nlen = ed_self.get_line_len(y)
             x_from = min(nlen, scroll_x)
@@ -357,9 +358,13 @@ def find_visible_occurrences(ed_self: app.Editor, text, case_sensitive, whole_wo
                 y,
                 x_to,
                 y,
-                app.CARET_ADD,
+                app.CARET_SET_ONE,
                 options=app.CARET_OPTION_NO_SCROLL
                 )
+            #print("wrap off; caret: {}, text: '{}', opts: '{}'".format(ed_self.get_carets(), text, opts))
+            # API cannot find in multi-selections, so find in each selection
+            res += ed_self.action(app.EDACTION_FIND_ALL, text, opts, 0x7FFFFFFF)
+                
     else: # wrap=on
         ed_self.set_caret(
             0,
@@ -369,14 +374,12 @@ def find_visible_occurrences(ed_self: app.Editor, text, case_sensitive, whole_wo
             app.CARET_SET_ONE,
             options=app.CARET_OPTION_NO_SCROLL
             )
+        #print("wrap on; caret: {}, text: '{}', opts: '{}'".format(ed_self.get_carets(), text, opts))
+        res = ed_self.action(app.EDACTION_FIND_ALL, text, opts, 0x7FFFFFFF)
     #end if wrap
 
-    opts = ('c' if case_sensitive else '') + ('w' if whole_words else '') + 's' # search in selections only
-    print('carets:', ed_self.get_carets())
-    print("text: '{}', opts: '{}'".format(text, opts))
-    res = ed_self.action(app.EDACTION_FIND_ALL, text, opts, 0x7FFFFFFF)
     res = [r[:2] for r in res]
-    print('res:', res)
+    #print('res:', res)
 
     # restore old carets
     ed_self.set_caret(0, 0, -1, -1, app.CARET_DELETE_ALL)
