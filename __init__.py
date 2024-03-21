@@ -332,7 +332,7 @@ def find_all_occurrences(ed_self, text, case_sensitive, whole_words):
 def find_visible_occurrences(ed_self: app.Editor, text, case_sensitive, whole_words):
     '''
     Find matches only in the visible part of the screen.
-    Withing only visible part of huge lines.
+    In visible part of huge lines.
     '''
 
     global in_on_caret
