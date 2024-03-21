@@ -4,6 +4,7 @@ _ = get_translation(__file__)  # I18N
 MIN_LEN = 1
 MAX_LINES = 5000
 MAX_LINE_LEN = 800000
+MAX_COLUMNS = 500
 
 SEL_ALLOW             = True  # Highlight all occurrences of selected text.
 SEL_ALLOW_WHITE_SPACE = False # Highlight spaces there located in begin or end of selection

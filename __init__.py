@@ -27,6 +27,7 @@ on_event_disabled = False
 disable_status_msgs = False
 time_start = 0
 hili_full_doc = True
+in_on_caret = False
 
 class Moves(Enum):
     MOVE_FIRST = 0
@@ -135,7 +136,6 @@ def is_lexer_ok(s):
 
 
 class Command:
-
     def __init__(self):
         do_load_ops()
 
@@ -176,9 +176,14 @@ class Command:
 
     def on_caret(self, ed_self):
         global occurrences
+        global in_on_caret
 
         if on_event_disabled:
             return
+        if in_on_caret:
+            return
+        in_on_caret = True
+
         if not opt.CARET_ALLOW:
             abort = False
             if opt.SEL_ALLOW:
@@ -191,9 +196,11 @@ class Command:
 
             if abort:
                 occurrences = ()
+                in_on_caret = False
                 return
 
         self.work(ed_self)
+        in_on_caret = False
 
     def on_change_slow(self, ed_self):
         self.work(ed_self)
@@ -322,84 +329,58 @@ def find_all_occurrences(ed_self, text, case_sensitive, whole_words):
     res = [r[:2] for r in res]
     return res
 
-def find_visible_occurrences(ed_self, text, case_sensitive, whole_words):
+def find_visible_occurrences(ed_self: app.Editor, text, case_sensitive, whole_words):
+    '''Find occurrences in the visible part of screen only'''
+
+    global in_on_caret
+    in_on_caret = True
+
     text_len = len(text)
-
     wrap_type = ed_self.get_prop(app.PROP_WRAP)
-    scroll_x  = ed_self.get_prop(app.PROP_SCROLL_HORZ)
-    scroll_y  = ed_self.get_prop(app.PROP_SCROLL_VERT)
-    w         = ed_self.get_prop(app.PROP_VISIBLE_COLUMNS)
-    h         = ed_self.get_prop(app.PROP_VISIBLE_LINES)
+    line_top = ed_self.get_prop(app.PROP_LINE_TOP)
+    line_btm = ed_self.get_prop(app.PROP_LINE_BOTTOM)
+    scroll_horz = ed_self.get_prop(app.PROP_SCROLL_HORZ_INFO)
+    scroll_x = max(0, scroll_horz['pos'] - text_len)
+    scroll_w = scroll_horz['page']
+    old_carets = ed_self.get_carets()
 
-    offset_lines = [] # list of tuples: (x_offset, line_str_part)
     if wrap_type == app.WRAP_OFF:
-        x0,y0 = scroll_x,scroll_y
-        w += text_len + 1 # +1 to make sure the last barely visible word id hilited too
-        h += 1 # include last visible
-
-        offset_lines = [(x0, line) for line in get_area_lines(ed_self, x0,y0, w,h)]
-    else:   # wrap=on
-        _line_top    = ed_self.get_prop(app.PROP_LINE_TOP)
-        _line_bottom = ed_self.get_prop(app.PROP_LINE_BOTTOM)
-        y0 = _line_top # y offset
-
-        if _line_bottom == _line_top: # only 1 visible -- try get full line
-            offset_lines = [ (0, get_line(ed_self, _line_top)) ]
-
-        else: # more than one line visible
-            # get lines -- to see which are too long -- to not get wrapinfo on huge lines
-            offset_lines = [(0, get_line(ed_self, i))  for i in range(_line_top, _line_bottom + 1)]
-
-            if all(not item[1]  for item in offset_lines): # all lines are too big - nothing to return
-                return []
-
-            a_too_big = not bool(offset_lines[0][1])   # first (=a) visible line too big to process
-            z_too_big = not bool(offset_lines[-1][1])  # last (=z)  visibile ...
-
-            _wi_start_ind = _line_top + 1  if a_too_big else  _line_top
-            _wi_end_ind   = _line_bottom   if z_too_big else  _line_bottom + 1
-            wrapinfo = ed_self.get_wrapinfo(_wi_start_ind,  _wi_end_ind)
-
-            # visiible wrap-rows between first and last visible lines
-            _mid_rows_n = sum(_line_top < wi['line'] < _line_bottom  for wi in wrapinfo)
-            # unaccounted wrap-rows of text, can be end of first visible line, start of last, or both
-            h_miss = h - _mid_rows_n
-
-            # get end of first line (`a_end_txt`)  +  start of second (`z_start_txt`)
-            if not a_too_big:
-                # wrapinfo ind:  final part of first line
-                a_end = next(i for i,info in enumerate(wrapinfo)  if info['final'] == 0)
-                _a_miss_start = max(0,  a_end - h_miss)
-                a_x_offset = wrapinfo[_a_miss_start]['char']-1
-                _a_len     = wrapinfo[a_end        ]['char']-1 + wrapinfo[a_end      ]['len']
-
-                _a_txt     = offset_lines[0][1]
-                a_end_txt = _a_txt[a_x_offset:]
-                offset_lines[0] = (a_x_offset, a_end_txt)
-
-            if not z_too_big:
-                # wrapinfo ind (from end):  start of last line
-                _z_start = 1 + next(i for i,info in enumerate(reversed(wrapinfo))  if info['initial'])
-                _z_miss_end = min(-1, -_z_start + h_miss)
-                _z_x_end    = wrapinfo[_z_miss_end]['char']-1 + wrapinfo[_z_miss_end]['len']
-
-                _z_txt = offset_lines[-1][1]
-                z_start_txt = _z_txt[:_z_x_end]
-                offset_lines[-1] = (0, z_start_txt)
+        ed_self.set_caret(0, 0, -1, -1, app.CARET_DELETE_ALL)
+        for y in range(line_top, line_btm+1):
+            nlen = ed_self.get_line_len(y)
+            ed_self.set_caret(
+                min(nlen, scroll_x),
+                y,
+                min(nlen, scroll_x + scroll_w + text_len*2 + 1),
+                y,
+                app.CARET_ADD,
+                options=app.CARET_OPTION_NO_SCROLL
+                )
+    else: # wrap=on
+        ed_self.set_caret(
+            0,
+            line_top,
+            ed_self.get_line_len(line_btm),
+            line_btm,
+            app.CARET_SET_ONE,
+            options=app.CARET_OPTION_NO_SCROLL
+            )
     #end if wrap
 
-    re_pattern = re.escape(text)
-    if whole_words:
-        re_pattern = '\\b' + re_pattern + '\\b'
-    _re_flags = 0  if case_sensitive else  re.IGNORECASE
+    opts = ('c' if case_sensitive else '') + ('w' if whole_words else '') + 's' # search in selections only
+    #print('carets:', ed_self.get_carets())
+    #print("text: '{}', opts: '{}'".format(text, opts))
+    res = ed_self.action(app.EDACTION_FIND_ALL, text, opts, 0x7FFFFFFF)
+    res = [r[:2] for r in res]
 
-    items = []
-    for i,(x_offset, line) in enumerate(offset_lines):
-        if line: # prevent crash if line is None
-            for m in re.finditer(re_pattern, line, flags=_re_flags):
-                items.append( (x_offset+m.start(), y0+i) )
+    # restore old carets
+    ed_self.set_caret(0, 0, -1, -1, app.CARET_DELETE_ALL)
+    for x, y, x2, y2 in old_carets:
+        ed_self.set_caret(x, y, x2, y2, app.CARET_ADD, options=app.CARET_OPTION_NO_SCROLL)
 
-    return items
+    in_on_caret = False
+    #print('res:', res)
+    return res
 
 
 def get_word_under_caret(ed_self):
@@ -590,7 +571,8 @@ def _get_occurrences(ed_self, ignore_min_len=False):
         return
 
     hili_full_doc = True
-    if ed_self.get_line_count() > opt.MAX_LINES:
+    if ed_self.get_line_count() > opt.MAX_LINES or \
+       ed_self.get_prop(app.PROP_SCROLL_HORZ_INFO)['max'] > opt.MAX_COLUMNS:
         if opt.VISIBLE_FALLBACK:
             hili_full_doc = False
         else:
