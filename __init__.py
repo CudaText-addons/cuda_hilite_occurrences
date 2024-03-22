@@ -149,13 +149,14 @@ def get_hi_full_doc(ed):
         #print('partial: from scroll_horz')
         return False
 
-    char_cnt = ed.get_char_count(0x7fffFFFF, opt.MAX_TIME)
-    if char_cnt < 0: # -2 means 'time limit reached'
-        #print('partial: char_cnt time limit')
-        return False
-    if char_cnt > opt.AVG_LEN * line_cnt:
-        #print('partial: too long lines > avg_len')
-        return False
+    if hasattr(ed, 'get_char_count'): # support old CudaText releases
+        char_cnt = ed.get_char_count(0x7fffFFFF, opt.MAX_TIME)
+        if char_cnt < 0: # -2 means 'time limit reached'
+            #print('partial: char_cnt time limit')
+            return False
+        if char_cnt > opt.AVG_LEN * line_cnt:
+            #print('partial: too long lines > avg_len')
+            return False
 
     return True
 
