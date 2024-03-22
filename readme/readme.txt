@@ -29,6 +29,8 @@ Options:
 - "min_len"            : (def=1)           : Minimal length of fragment to handle
 - "max_lines"          : (def=1000)        : Maximal number of lines in document; when bigger: code highlights only _visible_ occurrences (much faster)
 - "max_line_len"       : (def=800000)      : Maximal length of lines, which will be handled by plugin (plugin will skip longer lines)
+- "max_time"           : (def=40)          : Maximal time (in msec) to count chars in the document
+- "avg_len"            : (def=100)         : Average length of line; if document has lot of longer lines, it will fallback to highlight only visible matches
 - "sel_allow"          : (def=True)        : Plugin handles current selection (on selection changing)
 - "sel_allow_spaces"   : (def=False)       : Plugin allows whitespace in selection, otherwise trim it
 - "sel_case_sens"      : (def=False)       : Search for selection is case-sensitive
