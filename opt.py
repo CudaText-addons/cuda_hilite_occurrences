@@ -2,7 +2,7 @@ from cudax_lib import get_translation
 _ = get_translation(__file__)  # I18N
 
 MIN_LEN = 1
-MAX_LINES = 1000
+MAX_LINES = 3000
 MAX_LINE_LEN = 800000
 MAX_COLUMNS = 500
 MAX_TIME = 40
