@@ -66,6 +66,8 @@ def do_load_ops():
     opt.MIN_LEN                = get_opt('min_len',             meta_def('min_len'))
     opt.MAX_LINES              = get_opt('max_lines',           meta_def('max_lines'))
     opt.MAX_LINE_LEN           = get_opt('max_line_len',        meta_def('max_line_len'))
+    opt.MAX_TIME               = get_opt('max_time',            meta_def('max_time'))
+    opt.AVG_LEN                = get_opt('avg_len',             meta_def('avg_len'))
 
     opt.SEL_ALLOW              = get_opt('sel_allow',           meta_def('sel_allow'))
     opt.SEL_ALLOW_WHITE_SPACE  = get_opt('sel_allow_spaces',    meta_def('sel_allow_spaces'))
@@ -133,6 +135,29 @@ def is_lexer_ok(s):
         return ','+s+',' in ','+opt.LEXERS_ALLOWED+','
     else:
         return True
+
+
+def get_hi_full_doc(ed):
+    '''
+    Gets True if document needs FULL highlighting; ie document is not 'too big'.
+    '''
+    line_cnt = ed.get_line_count()
+    if line_cnt > opt.MAX_LINES:
+        #print('partial: from max_lines')
+        return False
+    if ed.get_prop(app.PROP_SCROLL_HORZ_INFO)['max'] > opt.MAX_COLUMNS:
+        #print('partial: from scroll_horz')
+        return False
+
+    char_cnt = ed.get_char_count(0x7fffFFFF, opt.MAX_TIME)
+    if char_cnt < 0: # -2 means 'time limit reached'
+        #print('partial: char_cnt time limit')
+        return False
+    if char_cnt > opt.AVG_LEN * line_cnt:
+        #print('partial: too long lines > avg_len')
+        return False
+
+    return True
 
 
 class Command:
@@ -584,13 +609,9 @@ def _get_occurrences(ed_self, ignore_min_len=False):
     if not is_lexer_ok(lex):
         return
 
-    hili_full_doc = True
-    if ed_self.get_line_count() > opt.MAX_LINES or \
-       ed_self.get_prop(app.PROP_SCROLL_HORZ_INFO)['max'] > opt.MAX_COLUMNS:
-        if opt.VISIBLE_FALLBACK:
-            hili_full_doc = False
-        else:
-            return
+    hili_full_doc = get_hi_full_doc(ed_self)
+    if not hili_full_doc and not opt.VISIBLE_FALLBACK:
+        return
 
     current_text = _get_current_text(ed_self)
     if not current_text: return

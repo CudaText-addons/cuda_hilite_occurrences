@@ -5,6 +5,8 @@ MIN_LEN = 1
 MAX_LINES = 1000
 MAX_LINE_LEN = 800000
 MAX_COLUMNS = 500
+MAX_TIME = 40
+AVG_LEN = 100
 
 SEL_ALLOW             = True  # Highlight all occurrences of selected text.
 SEL_ALLOW_WHITE_SPACE = False # Highlight spaces there located in begin or end of selection
@@ -51,6 +53,18 @@ META_OPT = [
         {   "opt": "max_line_len",
             "cmt": [_("Maximal length of lines, which will be handled by plugin (plugin will skip longer lines)")],
             "def": MAX_LINE_LEN,
+            "frm": "int",
+            "chp": ""
+        },
+        {   "opt": "max_time",
+            "cmt": [_("Maximal time in milliseconds, to count chars in the document")],
+            "def": MAX_TIME,
+            "frm": "int",
+            "chp": ""
+        },
+        {   "opt": "avg_len",
+            "cmt": [_("Average length of line. If document has lot of longer lines, it will fallback to highlight only visible matches.")],
+            "def": AVG_LEN,
             "frm": "int",
             "chp": ""
         },
