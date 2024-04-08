@@ -12,7 +12,7 @@ from cudax_lib import get_translation
 _ = get_translation(__file__)  # I18N
 
 
-NONWORD_DEF = '''-+*=/\()[]{}<>"'.,:;~?!@#$%^&|`…'''
+NONWORD_DEF = '''-+*=/\\()[]{}<>"'.,:;~?!@#$%^&|`…'''
 NONWORD = {}
 MARKTAG = 101 # we need fixed value # app.app_proc(app.PROC_GET_UNIQUE_TAG, '')
 fn_config = 'cuda_hilite_occurrences.json'
