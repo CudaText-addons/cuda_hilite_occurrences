@@ -302,30 +302,30 @@ def paint_occurrences(ed_self, occurrences):
         return a[n]
 
     ed_self.attr(app.MARKERS_ADD_MANY, MARKTAG, xx, yy, nn,
-                 color_font=item_oth['color_font'],
-                 color_bg=item_oth['color_back'],
-                 color_border=item_oth['color_border'],
-                 font_bold=      b2i('b' in styles_oth),
-                 font_italic=    b2i('i' in styles_oth),
+                 color_font  = item_oth['color_font'],
+                 color_bg    = item_oth['color_back'],
+                 color_border= item_oth['color_border'],
+                 font_bold     = b2i('b' in styles_oth),
+                 font_italic   = b2i('i' in styles_oth),
                  font_strikeout= b2i('s' in styles_oth),
-                 border_left=  brd2brd(item_oth['border_left']),
+                 border_left =  brd2brd(item_oth['border_left']),
                  border_right= brd2brd(item_oth['border_right']),
-                 border_up=    brd2brd(item_oth['border_top']),
-                 border_down=  brd2brd(item_oth['border_bottom'])
+                 border_up   = brd2brd(item_oth['border_top']),
+                 border_down = brd2brd(item_oth['border_bottom'])
                  )
 
     #if opt.CARET_ALLOW and not is_selection:
     ed_self.attr(app.MARKERS_ADD, MARKTAG, x0, y0, nlen,
-                 color_font=item_cur['color_font'],
-                 color_bg=item_cur['color_back'],
-                 color_border=item_cur['color_border'],
-                 font_bold=      b2i('b' in styles_cur),
-                 font_italic=    b2i('i' in styles_cur),
+                 color_font  = item_cur['color_font'],
+                 color_bg    = item_cur['color_back'],
+                 color_border= item_cur['color_border'],
+                 font_bold     = b2i('b' in styles_cur),
+                 font_italic   = b2i('i' in styles_cur),
                  font_strikeout= b2i('s' in styles_cur),
-                 border_left=  brd2brd(item_cur['border_left']),
+                 border_left = brd2brd(item_cur['border_left']),
                  border_right= brd2brd(item_cur['border_right']),
-                 border_up=    brd2brd(item_cur['border_top']),
-                 border_down=  brd2brd(item_cur['border_bottom'])
+                 border_up   = brd2brd(item_cur['border_top']),
+                 border_down = brd2brd(item_cur['border_bottom'])
                  )
 
     #tick = round((time.time() - time_start) * 1000)
