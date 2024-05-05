@@ -29,6 +29,9 @@ time_start = 0
 hili_full_doc = True
 in_on_caret = False
 
+item_cur = None
+item_oth = None
+
 class Moves(Enum):
     MOVE_FIRST = 0
     MOVE_LAST  = 1
@@ -99,7 +102,12 @@ def do_load_ops():
 
 def do_update_colors():
 
-    pass
+    global item_cur
+    global item_oth
+
+    theme = app.app_proc(app.PROC_THEME_SYNTAX_DICT_GET, '')
+    item_cur = theme.get(opt.THEME_CURRENT)
+    item_oth = theme.get(opt.THEME_OTHER)
 
 
 def is_lexer_ok(s):
@@ -280,9 +288,8 @@ def paint_occurrences(ed_self, occurrences):
     yy = [i[1] for i in items]
     nn = [nlen] * len(items)
 
-    theme = app.app_proc(app.PROC_THEME_SYNTAX_DICT_GET, '')
-    item_cur = theme.get(opt.THEME_CURRENT)
-    item_oth = theme.get(opt.THEME_OTHER)
+    global item_cur
+    global item_oth
     styles_cur = item_cur['styles']
     styles_oth = item_oth['styles']
 
