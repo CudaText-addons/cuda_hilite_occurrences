@@ -1,3 +1,6 @@
+2024.05.05
++ add: make syntax-theme styles working for highlighted matches: border left/right/up/down, and font-styles bold/italic/crossed (thanks @pintassilgo)
+
 2024.03.22
 + add: using CudaText 1.211.3 new API, check total count of chars in document;
     + helper option added: "avg_len"
