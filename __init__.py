@@ -298,17 +298,8 @@ def paint_occurrences(ed_self, occurrences):
 
     def brd2brd(n):
         '''Convert from enum "border kind of syntax-theme" to enum "border kind of Editor.attr" '''
-        if n==0: return 0
-        if n==1: return 1
-        if n==2: return 2 
-        if n==3: return 4 
-        if n==4: return 2
-        if n==5: return 2
-        if n==6: return 3
-        if n==7: return 3
-        if n==8: return 6
-        if n==9: return 3
-        return 0 
+        a = (0, 1, 2, 4, 2, 2, 3, 3, 6, 3)
+        return a[n]
 
     ed_self.attr(app.MARKERS_ADD_MANY, MARKTAG, xx, yy, nn,
                  color_font=item_oth['color_font'],
