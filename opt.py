@@ -24,17 +24,8 @@ CARET_WHOLE_WORDS     = True # Whole word only.
 LEXERS_ALLOWED = ''
 LEXERS_DISABLED = ''
 
-COLOR_FONT_CURRENT = 0
-COLOR_FONT_OTHER = 0
-COLOR_BG_CURRENT = 0
-COLOR_BG_OTHER = 0
-
 THEME_CURRENT = ''
 THEME_OTHER = ''
-COLOR_BRD_OTHER = 0
-BRD_OTHER = 0
-COLOR_BRD_CURRENT = 0
-BRD_CURRENT = 0
 
 ALLOWED_ITEMS = ['IncludeBG1', 'IncludeBG2', 'IncludeBG3', 'IncludeBG4', 'SectionBG1', 'SectionBG2', 'SectionBG3', 'SectionBG4', 'BracketBG', 'CurBlockBG', 'LightBG1', 'LightBG2', 'LightBG3', 'LightBG4', 'LightBG5']
 META_OPT = [

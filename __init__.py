@@ -99,30 +99,7 @@ def do_load_ops():
 
 def do_update_colors():
 
-    theme = app.app_proc(app.PROC_THEME_SYNTAX_DICT_GET, '')
-    item_cur = theme.get(opt.THEME_CURRENT)
-    item_oth = theme.get(opt.THEME_OTHER)
-
-    opt.COLOR_FONT_CURRENT = app.COLOR_NONE
-    opt.COLOR_FONT_OTHER = app.COLOR_NONE
-
-    if item_cur and item_oth:
-        opt.COLOR_BG_CURRENT = item_cur['color_back']
-        opt.COLOR_BRD_CURRENT = item_cur['color_border']
-        opt.BRD_CURRENT = item_cur['border_bottom']
-        opt.COLOR_BG_OTHER = item_oth['color_back']
-        opt.COLOR_BRD_OTHER = item_oth['color_border']
-        opt.BRD_OTHER = item_oth['border_bottom']
-    else:
-        log('Incorrect theme item(s) "%s", "%s" in "%s"' % (opt.THEME_CURRENT,
-                                                            opt.THEME_OTHER,
-                                                            fn_config))
-        opt.COLOR_BG_CURRENT = 0x80e080
-        opt.COLOR_BG_OTHER = 0x00e0e0
-        opt.COLOR_BRD_CURRENT = 0
-        opt.COLOR_BRD_OTHER = 0
-        opt.BRD_CURRENT = 0
-        opt.BRD_OTHER = 0
+    pass
 
 
 def is_lexer_ok(s):
