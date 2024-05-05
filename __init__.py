@@ -303,25 +303,40 @@ def paint_occurrences(ed_self, occurrences):
     yy = [i[1] for i in items]
     nn = [nlen] * len(items)
 
+    theme = app.app_proc(app.PROC_THEME_SYNTAX_DICT_GET, '')
+    item_cur = theme.get(opt.THEME_CURRENT)
+    item_oth = theme.get(opt.THEME_OTHER)
+    styles_cur = item_cur['styles']
+    styles_oth = item_oth['styles']
+
+    def b2i(b):
+        return 1 if b else 0
+
     ed_self.attr(app.MARKERS_ADD_MANY, MARKTAG, xx, yy, nn,
-                 color_font=opt.COLOR_FONT_OTHER,
-                 color_bg=opt.COLOR_BG_OTHER,
-                 color_border=opt.COLOR_BRD_OTHER,
-                 border_left=opt.BRD_OTHER,
-                 border_right=opt.BRD_OTHER,
-                 border_up=opt.BRD_OTHER,
-                 border_down=opt.BRD_OTHER,
+                 color_font=item_oth['color_font'],
+                 color_bg=item_oth['color_back'],
+                 color_border=item_oth['color_border'],
+                 font_bold=b2i('b' in styles_oth),
+                 font_italic=b2i('i' in styles_oth),
+                 font_strikeout=b2i('s' in styles_oth),
+                 border_left=item_oth['border_left'],
+                 border_right=item_oth['border_right'],
+                 border_up=item_oth['border_top'],
+                 border_down=item_oth['border_bottom']
                  )
 
     #if opt.CARET_ALLOW and not is_selection:
     ed_self.attr(app.MARKERS_ADD, MARKTAG, x0, y0, nlen,
-                 color_font=opt.COLOR_FONT_CURRENT,
-                 color_bg=opt.COLOR_BG_CURRENT,
-                 color_border=opt.COLOR_BRD_CURRENT,
-                 border_left=opt.BRD_CURRENT,
-                 border_right=opt.BRD_CURRENT,
-                 border_up=opt.BRD_CURRENT,
-                 border_down=opt.BRD_CURRENT,
+                 color_font=item_cur['color_font'],
+                 color_bg=item_cur['color_back'],
+                 color_border=item_cur['color_border'],
+                 font_bold=b2i('b' in styles_cur),
+                 font_italic=b2i('i' in styles_cur),
+                 font_strikeout=b2i('s' in styles_cur),
+                 border_left=item_cur['border_left'],
+                 border_right=item_cur['border_right'],
+                 border_up=item_cur['border_top'],
+                 border_down=item_cur['border_bottom']
                  )
 
     #tick = round((time.time() - time_start) * 1000)
