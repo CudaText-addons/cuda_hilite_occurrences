@@ -296,17 +296,31 @@ def paint_occurrences(ed_self, occurrences):
     def b2i(b):
         return 1 if b else 0
 
+    def brd2brd(n):
+        '''Convert from enum "border kind of syntax-theme" to enum "border kind of Editor.attr" '''
+        if n==0: return 0
+        if n==1: return 1
+        if n==2: return 2 
+        if n==3: return 4 
+        if n==4: return 2
+        if n==5: return 2
+        if n==6: return 3
+        if n==7: return 3
+        if n==8: return 6
+        if n==9: return 3
+        return 0 
+
     ed_self.attr(app.MARKERS_ADD_MANY, MARKTAG, xx, yy, nn,
                  color_font=item_oth['color_font'],
                  color_bg=item_oth['color_back'],
                  color_border=item_oth['color_border'],
-                 font_bold=b2i('b' in styles_oth),
-                 font_italic=b2i('i' in styles_oth),
-                 font_strikeout=b2i('s' in styles_oth),
-                 border_left=item_oth['border_left'],
-                 border_right=item_oth['border_right'],
-                 border_up=item_oth['border_top'],
-                 border_down=item_oth['border_bottom']
+                 font_bold=      b2i('b' in styles_oth),
+                 font_italic=    b2i('i' in styles_oth),
+                 font_strikeout= b2i('s' in styles_oth),
+                 border_left=  brd2brd(item_oth['border_left']),
+                 border_right= brd2brd(item_oth['border_right']),
+                 border_up=    brd2brd(item_oth['border_top']),
+                 border_down=  brd2brd(item_oth['border_bottom'])
                  )
 
     #if opt.CARET_ALLOW and not is_selection:
@@ -314,13 +328,13 @@ def paint_occurrences(ed_self, occurrences):
                  color_font=item_cur['color_font'],
                  color_bg=item_cur['color_back'],
                  color_border=item_cur['color_border'],
-                 font_bold=b2i('b' in styles_cur),
-                 font_italic=b2i('i' in styles_cur),
-                 font_strikeout=b2i('s' in styles_cur),
-                 border_left=item_cur['border_left'],
-                 border_right=item_cur['border_right'],
-                 border_up=item_cur['border_top'],
-                 border_down=item_cur['border_bottom']
+                 font_bold=      b2i('b' in styles_cur),
+                 font_italic=    b2i('i' in styles_cur),
+                 font_strikeout= b2i('s' in styles_cur),
+                 border_left=  brd2brd(item_cur['border_left']),
+                 border_right= brd2brd(item_cur['border_right']),
+                 border_up=    brd2brd(item_cur['border_top']),
+                 border_down=  brd2brd(item_cur['border_bottom'])
                  )
 
     #tick = round((time.time() - time_start) * 1000)
