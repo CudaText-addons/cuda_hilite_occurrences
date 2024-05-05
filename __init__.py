@@ -308,7 +308,7 @@ def paint_occurrences(ed_self, occurrences):
                  font_bold     = b2i('b' in styles_oth),
                  font_italic   = b2i('i' in styles_oth),
                  font_strikeout= b2i('s' in styles_oth),
-                 border_left =  brd2brd(item_oth['border_left']),
+                 border_left = brd2brd(item_oth['border_left']),
                  border_right= brd2brd(item_oth['border_right']),
                  border_up   = brd2brd(item_oth['border_top']),
                  border_down = brd2brd(item_oth['border_bottom'])
