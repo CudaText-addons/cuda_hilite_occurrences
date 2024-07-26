@@ -179,11 +179,8 @@ class Command:
         #time_start = time.time()
 
         res = process_ocurrences(ed_self)
-        if not res:
-            app.msg_status('')
-            return
-
-        paint_occurrences(ed_self, res)
+        if res:
+            paint_occurrences(ed_self, res)
 
     def on_caret(self, ed_self):
         global occurrences
