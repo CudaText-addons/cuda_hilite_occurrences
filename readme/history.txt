@@ -1,3 +1,6 @@
+2024.09.01
+- fix: double-click on a word can highlight 'cached matches' which is not OK since the selection is changed
+
 2024.05.05
 + add: make syntax-theme styles working for highlighted matches: border left/right/up/down, and font-styles bold/italic/crossed (thanks @pintassilgo)
 
