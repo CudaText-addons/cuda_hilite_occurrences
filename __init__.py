@@ -645,10 +645,11 @@ def _get_occurrences(ed_self, ignore_min_len=False):
     x1, y1 = caret_pos[:2]
 
     # Validate if the searching word is the same of the previous occurrences
-    if len(occurrences) > 0:
+    if len(occurrences) >= 3:
         prev_items = occurrences[0]
         prev_text = occurrences[1]
-        if prev_text == text and (x1, y1) in prev_items:
+        prev_is_sel = occurrences[2]
+        if prev_text == text and prev_is_sel == is_selection and (x1, y1) in prev_items:
             log("Returning previous occurrences")
             return prev_items, text, is_selection, x1, y1
 
