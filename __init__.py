@@ -15,6 +15,8 @@ _ = get_translation(__file__)  # I18N
 NONWORD_DEF = '''-+*=/\\()[]{}<>"'.,:;~?!@#$%^&|`…'''
 NONWORD = {}
 MARKTAG = 101 # we need fixed value # app.app_proc(app.PROC_GET_UNIQUE_TAG, '')
+CARET_FLAG_NO_EVENT = app.CARET_OPTION_NO_EVENT if app.app_api_version()>='1.0.462' else 0
+
 fn_config = 'cuda_hilite_occurrences.json'
 
 # Save current occurrences result, if user execute select_all command, Cud does
@@ -239,9 +241,9 @@ class Command:
 
         on_event_disabled = True
         # Cleaning previous carets if exists
-        ed.set_caret(x0, y0, -1, -1)
+        ed.set_caret(x0, y0, -1, -1, options=CARET_FLAG_NO_EVENT)
         for item in items:
-            ed.set_caret(item[0] + nlen, item[1], item[0], item[1], app.CARET_ADD)
+            ed.set_caret(item[0] + nlen, item[1], item[0], item[1], app.CARET_ADD, options=CARET_FLAG_NO_EVENT)
 
         app.msg_status(_('Matches selected: {}').format(ncount))
         on_event_disabled = False
@@ -389,7 +391,7 @@ def find_visible_occurrences(ed_self: app.Editor, text, case_sensitive, whole_wo
                 x_to,
                 y,
                 app.CARET_SET_ONE,
-                options=app.CARET_OPTION_NO_SCROLL
+                options=app.CARET_OPTION_NO_SCROLL+CARET_FLAG_NO_EVENT
                 )
             #print("wrap off; caret: {}, text: '{}', opts: '{}'".format(ed_self.get_carets(), text, opts))
             # API cannot find in multi-selections, so find in each selection
@@ -402,7 +404,7 @@ def find_visible_occurrences(ed_self: app.Editor, text, case_sensitive, whole_wo
             ed_self.get_line_len(line_btm),
             line_btm,
             app.CARET_SET_ONE,
-            options=app.CARET_OPTION_NO_SCROLL
+            options=app.CARET_OPTION_NO_SCROLL+CARET_FLAG_NO_EVENT
             )
         #print("wrap on; caret: {}, text: '{}', opts: '{}'".format(ed_self.get_carets(), text, opts))
         res = ed_self.action(app.EDACTION_FIND_ALL, text, opts, 0x7FFFFFFF)
@@ -414,11 +416,11 @@ def find_visible_occurrences(ed_self: app.Editor, text, case_sensitive, whole_wo
     # restore old caret(s)
     if len(old_carets)==1:
         x, y, x2, y2 = old_carets[0]
-        ed_self.set_caret(x, y, x2, y2, options=app.CARET_OPTION_NO_SCROLL)
+        ed_self.set_caret(x, y, x2, y2, options=app.CARET_OPTION_NO_SCROLL+CARET_FLAG_NO_EVENT)
     else:
-        ed_self.set_caret(0, 0, -1, -1, app.CARET_DELETE_ALL)
+        ed_self.set_caret(0, 0, -1, -1, app.CARET_DELETE_ALL, options=CARET_FLAG_NO_EVENT)
         for x, y, x2, y2 in old_carets:
-            ed_self.set_caret(x, y, x2, y2, app.CARET_ADD, options=app.CARET_OPTION_NO_SCROLL)
+            ed_self.set_caret(x, y, x2, y2, app.CARET_ADD, options=app.CARET_OPTION_NO_SCROLL+CARET_FLAG_NO_EVENT)
 
     in_on_caret = False
     return res
@@ -549,7 +551,7 @@ def move_caret(mode):
 
     on_event_disabled = True
     occurrences = (items, text, is_selection, x0, y0)
-    ed.set_caret(x0, y0, -1, -1)
+    ed.set_caret(x0, y0, -1, -1, options=CARET_FLAG_NO_EVENT)
     ed.focus()
 
     paint_occurrences(ed, occurrences)
