@@ -1,3 +1,6 @@
+2024.12.27
++ add: allow work with multi-line selection too
+
 2024.10.23
 + add: support new API of CudaText 1.218.1+
 
