@@ -481,10 +481,7 @@ def _get_current_text(ed_self):
                 x1, x2 = x2, x1
                 y1, y2 = y2, y1
                 caret_pos = (x1, y1, x2, y2)
-
-            # After sorting y2 always will be greater or equal to y1
-            # No multi-line allowed
-            if (y2 - y1) > 0: return
+            # Multi-line selection (y2 > y1) is allowed
 
             current_text = ed_self.get_text_sel()
         else:
