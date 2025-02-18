@@ -1,3 +1,6 @@
+2025.02.18
+- fix: plugin almost hanged when it tried to get selection-text with 400K lines selected; now only selection of 1-2 lines is allowed to handle (thanks @pintassilgo)
+
 2024.12.27
 + add: allow work with multi-line selection too
 
