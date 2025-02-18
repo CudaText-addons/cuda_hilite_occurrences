@@ -36,6 +36,7 @@ Options:
 - "sel_case_sens"      : (def=False)       : Search for selection is case-sensitive
 - "sel_words_only"     : (def=False)       : Plugin handles selection only when it is whole word
 - "sel_whole_words"    : (def=False)       : Search for selection finds whole words only
+- "sel_lines_max"      : (def=3)           : Maximal count of selected lines allowed to handle. E.g. if you select 5000 lines, plugin won't search such selection.
 - "mark_ignore_min_len": (def=False)       : Mark occurrences of selected text ignores 'min_len' option. Related to "Plugins / Highlight Occurrences / Select all occurrences" option
 - "visible_fallback"   : (def=True)        : When text is over max_lines - fallback to highlighting only in visible text
 - "caret_allow"        : (def=True)        : Plugin handles word under caret (on caret moving)
