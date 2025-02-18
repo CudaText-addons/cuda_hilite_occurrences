@@ -382,6 +382,8 @@ def find_visible_occurrences(ed_self: app.Editor, text, case_sensitive, whole_wo
         res = []
         for y in range(line_top, line_btm+1):
             nlen = ed_self.get_line_len(y)
+            if nlen is None: # we are on incorrect line index
+                break
             x_from = min(nlen, scroll_x)
             x_to = min(nlen, scroll_x + scroll_w + text_len*2 + 1)
             if x_from==x_to:
