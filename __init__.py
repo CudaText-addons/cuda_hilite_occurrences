@@ -79,6 +79,7 @@ def do_load_ops():
     opt.SEL_CASE_SENSITIVE     = get_opt('sel_case_sens',       meta_def('sel_case_sens'))
     opt.SEL_WORDS_ONLY         = get_opt('sel_words_only',      meta_def('sel_words_only'))
     opt.SEL_WHOLE_WORDS        = get_opt('sel_whole_words',     meta_def('sel_whole_words'))
+    opt.SEL_LINES_MAX          = get_opt('sel_lines_max',       meta_def('sel_lines_max'))
 
     opt.MARK_IGNORE_MIN_LEN    = get_opt('mark_ignore_min_len', meta_def('mark_ignore_min_len'))
     opt.VISIBLE_FALLBACK       = get_opt('visible_fallback',    meta_def('visible_fallback'))
@@ -479,9 +480,8 @@ def _get_current_text(ed_self):
                 y1, y2 = y2, y1
                 caret_pos = (x1, y1, x2, y2)
 
-            # Multi-line selection is NOT allowed, to avoid almost-hanging on 100M file with select-all
-            SEL_LINES_ALLOWED = 2
-            if y2 > y1+SEL_LINES_ALLOWED:
+            # Big multi-line sel is NOT allowed, to avoid almost-hanging with 400K lines selected
+            if y2 > y1 + opt.SEL_LINES_MAX:
                 return
             current_text = ed_self.get_text_sel()
         else:

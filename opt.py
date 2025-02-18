@@ -13,6 +13,7 @@ SEL_ALLOW_WHITE_SPACE = False # Highlight spaces there located in begin or end o
 SEL_CASE_SENSITIVE    = False
 SEL_WORDS_ONLY        = False # Highlight character only if it contains in CHARS.
 SEL_WHOLE_WORDS       = False # Whole word only. Used only if bool(SEL_WORDS_ONLY) == True.
+SEL_LINES_MAX         = 3
 
 MARK_IGNORE_MIN_LEN   = False
 VISIBLE_FALLBACK      = True
@@ -87,6 +88,12 @@ META_OPT = [
             "cmt": [_("Search for selection finds whole words only")],
             "def": SEL_WHOLE_WORDS,
             "frm": "bool",
+            "chp": ""
+        },
+        {   "opt": "sel_lines_max",
+            "cmt": [_("Maximal count of selected lines, which plugin can handle")],
+            "def": SEL_LINES_MAX,
+            "frm": "int",
             "chp": ""
         },
         {   "opt": "mark_ignore_min_len",

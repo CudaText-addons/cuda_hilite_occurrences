@@ -1,5 +1,6 @@
 2025.02.18
-- fix: plugin almost hanged when it tried to get selection-text with 400K lines selected; now only selection of 1-2 lines is allowed to handle (thanks @pintassilgo)
+- fix: plugin almost hanged when it tried to get selection-text with 400K lines selected (thanks @pintassilgo)
++ add: option "sel_lines_max"
 
 2024.12.27
 + add: allow work with multi-line selection too
@@ -41,7 +42,7 @@
 
 2021.06.27 (patch by @halfbrained)
 + add: option "visible_fallback", to highlight occurrences only in visible part of large documents
-       (when document is bigger than "max_lines" allows) 
+       (when document is bigger than "max_lines" allows)
 
 2021.06.08
 + add: also use plugin cuda_prefs for Configuration dialog
@@ -51,7 +52,7 @@
 - fix: must react to on_change too to clear marks after e.g. Replace-all in CudaText
 
 2021.01.06
-+ add: show elapsed time in the statusbar: "Matches highlighted: 1/30 (3ms)" 
++ add: show elapsed time in the statusbar: "Matches highlighted: 1/30 (3ms)"
 
 2020.05.23
 - fix: option "nearest_line_count" was not used since 2019.12, removed now
