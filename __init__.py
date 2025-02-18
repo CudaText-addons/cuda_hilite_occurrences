@@ -396,7 +396,7 @@ def find_visible_occurrences(ed_self: app.Editor, text, case_sensitive, whole_wo
             #print("wrap off; caret: {}, text: '{}', opts: '{}'".format(ed_self.get_carets(), text, opts))
             # API cannot find in multi-selections, so find in each selection
             res += ed_self.action(app.EDACTION_FIND_ALL, text, opts, 0x7FFFFFFF)
-                
+
     else: # wrap=on
         ed_self.set_caret(
             0,
@@ -467,11 +467,8 @@ def get_word_under_caret(ed_self):
 
 def _get_current_text(ed_self):
     caret_pos = ed_self.get_carets()[0]
-
     x1, y1, x2, y2 = caret_pos
-
     is_selection = y2 >= 0
-
     current_text = ''
 
     if is_selection:
@@ -481,8 +478,11 @@ def _get_current_text(ed_self):
                 x1, x2 = x2, x1
                 y1, y2 = y2, y1
                 caret_pos = (x1, y1, x2, y2)
-            # Multi-line selection (y2 > y1) is allowed
 
+            # Multi-line selection is NOT allowed, to avoid almost-hanging on 100M file with select-all
+            SEL_LINES_ALLOWED = 2
+            if y2 > y1+SEL_LINES_ALLOWED:
+                return
             current_text = ed_self.get_text_sel()
         else:
             return
