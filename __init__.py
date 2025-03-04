@@ -401,13 +401,15 @@ def find_visible_occurrences(ed_self: app.Editor, text, case_sensitive, whole_wo
             res += ed_self.action(app.EDACTION_FIND_ALL, text, opts, 0x7FFFFFFF)
 
     else: # wrap=on
+        x2 = ed_self.get_line_len(line_btm) or 0
+        opt = app.CARET_OPTION_NO_SCROLL+CARET_FLAG_NO_EVENT
         ed_self.set_caret(
             0,
             line_top,
-            ed_self.get_line_len(line_btm),
+            x2,
             line_btm,
             app.CARET_SET_ONE,
-            options=app.CARET_OPTION_NO_SCROLL+CARET_FLAG_NO_EVENT
+            options=opt
             )
         #print("wrap on; caret: {}, text: '{}', opts: '{}'".format(ed_self.get_carets(), text, opts))
         res = ed_self.action(app.EDACTION_FIND_ALL, text, opts, 0x7FFFFFFF)
