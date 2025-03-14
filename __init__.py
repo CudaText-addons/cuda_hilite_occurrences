@@ -302,7 +302,7 @@ def paint_occurrences(ed_self, occurrences):
         return a[n]
 
     ed_self.attr(app.MARKERS_ADD_MANY, MARKTAG, xx, yy, nn,
-                 color_font  = item_oth['color_font'],
+                 color_font  = item_oth['color_font'] if item_oth['type']!=3 else app.COLOR_NONE,
                  color_bg    = item_oth['color_back'],
                  color_border= item_oth['color_border'],
                  font_bold     = b2i('b' in styles_oth),
