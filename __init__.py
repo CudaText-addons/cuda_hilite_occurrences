@@ -316,7 +316,7 @@ def paint_occurrences(ed_self, occurrences):
 
     #if opt.CARET_ALLOW and not is_selection:
     ed_self.attr(app.MARKERS_ADD, MARKTAG, x0, y0, nlen,
-                 color_font  = item_cur['color_font'],
+                 color_font  = item_oth['color_font'] if item_oth['type']!=3 else app.COLOR_NONE,
                  color_bg    = item_cur['color_back'],
                  color_border= item_cur['color_border'],
                  font_bold     = b2i('b' in styles_cur),
