@@ -1,3 +1,6 @@
+2025.11.29
+- fix: commands "Move to .... occurrence" did not fire 'on_caret' so plugin Folding_Caption did not update its caption
+
 2025.03.14
 - fix: if syntax-theme item for "other matches" has Type="Color BG only", then don't highlight font color (CudaText issue #5892)
 

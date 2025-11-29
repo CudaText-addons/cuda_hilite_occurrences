@@ -552,7 +552,7 @@ def move_caret(mode):
 
     on_event_disabled = True
     occurrences = (items, text, is_selection, x0, y0)
-    ed.set_caret(x0, y0, -1, -1, options=CARET_FLAG_NO_EVENT)
+    ed.set_caret(x0, y0, -1, -1) #, options=CARET_FLAG_NO_EVENT)
     ed.focus()
 
     paint_occurrences(ed, occurrences)
