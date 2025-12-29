@@ -96,11 +96,8 @@ def do_load_ops():
     do_update_colors()
 
     # subscribe to events
-    events = 'on_caret,on_state,on_change_slow'
-    if opt.VISIBLE_FALLBACK:
-        events += ',on_scroll'
-    ev_str = 'cuda_hilite_occurrences;{};;'.format(events)
-    app.app_proc(app.PROC_SET_EVENTS, ev_str)
+    act = app.PROC_EVENTS_SUB if opt.VISIBLE_FALLBACK else app.PROC_EVENTS_UNSUB
+    app.app_proc(act, 'cuda_hilite_occurrences;on_scroll;;')
 
 
 def do_update_colors():

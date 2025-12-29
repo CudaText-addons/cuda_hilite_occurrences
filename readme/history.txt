@@ -1,3 +1,6 @@
+2025.12.29
+- fix: avoid deprecated API
+
 2025.11.29
 - fix: commands "Move to .... occurrence" did not fire 'on_caret' so plugin Folding_Caption did not update its caption
 
@@ -136,14 +139,13 @@
 2017.01.27
 - fix: crash if caret with selection beyond EOF (mass replace)
 
-2016.07.31 (Alex)
+2016.07.31 (Alexey)
 + add: config file
 + add: command "Config" in Plugins menu
 
 Changes since original plugin:
-+ refactored
+* refactored
 + add: hilite word under caret
 + add: hilite not only words but any chars
 + add: hilite case sensitive/insensitive
 - fix: if only 2 occurences exist, they're not hilited
-* change: color of hilite
