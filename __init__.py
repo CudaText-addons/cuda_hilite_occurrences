@@ -308,7 +308,9 @@ def paint_occurrences(ed_self, occurrences):
                  border_left = brd2brd(item_oth['border_left']),
                  border_right= brd2brd(item_oth['border_right']),
                  border_up   = brd2brd(item_oth['border_top']),
-                 border_down = brd2brd(item_oth['border_bottom'])
+                 border_down = brd2brd(item_oth['border_bottom']),
+                 show_on_map = 1,
+                 map_only = 2,
                  )
 
     #if opt.CARET_ALLOW and not is_selection:
@@ -322,7 +324,9 @@ def paint_occurrences(ed_self, occurrences):
                  border_left = brd2brd(item_cur['border_left']),
                  border_right= brd2brd(item_cur['border_right']),
                  border_up   = brd2brd(item_cur['border_top']),
-                 border_down = brd2brd(item_cur['border_bottom'])
+                 border_down = brd2brd(item_cur['border_bottom']),
+                 show_on_map = 1,
+                 map_only = 2,
                  )
 
     #tick = round((time.time() - time_start) * 1000)
